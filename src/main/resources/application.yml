@@ -1,0 +1,24 @@
+jwt:
+  header: Authorization
+  secret: ENC(FsvzyqNit5Lk3w3OcT7RPQ==)
+  start: Bearer
+  expiration: 86400
+  key:
+    public: rsakey/publicKey
+    private: rsakey/privateKey
+server:
+  port: 8280
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/backend?serverTimezone=GMT%2B8
+    username: root
+    password: ENC(SNcPwx+TsUHK2syuYLMFfw==)
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+jasypt:
+  encryptor:
+    password: awwbwg
