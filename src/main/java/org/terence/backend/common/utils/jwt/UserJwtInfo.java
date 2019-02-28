@@ -7,7 +7,7 @@ import java.util.Objects;
  * @author terence
  * @since 2019/2/19 9:31
  */
-public class UserJwtInfo implements Serializable, IUserIwtInfo {
+public class UserJwtInfo implements Serializable, IUserJwtInfo {
     private static final long serialVersionUID = 7252149547575110979L;
 
     private String id;

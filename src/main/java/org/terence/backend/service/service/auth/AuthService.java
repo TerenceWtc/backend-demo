@@ -1,5 +1,6 @@
 package org.terence.backend.service.service.auth;
 
+import org.terence.backend.service.vo.auth.Token;
 import org.terence.backend.service.vo.base.ObjectResponse;
 
 /**
@@ -8,5 +9,9 @@ import org.terence.backend.service.vo.base.ObjectResponse;
  */
 public interface AuthService {
 
-    ObjectResponse<String> getToken(String username, String password);
+    ObjectResponse<Token> login(String username, String password);
+
+    ObjectResponse<Token> register(String username, String password, String name, String email);
+
+    ObjectResponse<String> refresh(String refreshToken);
 }

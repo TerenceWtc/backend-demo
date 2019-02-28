@@ -2,10 +2,11 @@ jwt:
   header: Authorization
   secret: ENC(FsvzyqNit5Lk3w3OcT7RPQ==)
   start: Bearer
-  expiration: 86400
+  expiration: 1800
+  refresh: 604800
   key:
-    public: rsakey/publicKey
-    private: rsakey/privateKey
+    public: rsakey/public.key
+    private: rsakey/private.key
 server:
   port: 8280
 spring:

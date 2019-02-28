@@ -9,4 +9,6 @@ import org.terence.backend.dao.entity.admin.User;
 public interface UserService {
 
     User getUserByUsername(String username);
+
+    User registerUser(User user);
 }

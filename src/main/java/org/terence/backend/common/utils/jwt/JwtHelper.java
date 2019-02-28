@@ -2,9 +2,7 @@ package org.terence.backend.common.utils.jwt;
 
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -30,7 +28,7 @@ public class JwtHelper {
      * @return
      * @throws Exception
      */
-    public static String generateToken(IUserIwtInfo userIwtInfo, String privateKeyPath, int expiration) throws Exception {
+    public static String generateToken(IUserJwtInfo userIwtInfo, String privateKeyPath, int expiration) throws Exception {
         PrivateKey privateKey = rsaKeyHelper.getPrivateKey(privateKeyPath);
         return generation(userIwtInfo, privateKey, expiration);
     }
@@ -44,22 +42,22 @@ public class JwtHelper {
      * @return
      * @throws Exception
      */
-    public static String generateToken(IUserIwtInfo userIwtInfo, byte[] privateKeyByte, int expiration) throws Exception {
+    public static String generateToken(IUserJwtInfo userIwtInfo, byte[] privateKeyByte, int expiration) throws Exception {
         PrivateKey privateKey = rsaKeyHelper.getPrivateKey(privateKeyByte);
         return generation(userIwtInfo, privateKey, expiration);
     }
 
-    public static IUserIwtInfo getInfoFromToken(String token, String publicKeyPath) throws Exception {
+    public static IUserJwtInfo getInfoFromToken(String token, String publicKeyPath) throws Exception {
         PublicKey publicKey = rsaKeyHelper.getPublicKey(publicKeyPath);
         return getInfo(token, publicKey);
     }
 
-    public static IUserIwtInfo getInfoFromToken(String token, byte[] publicKeyByte) throws Exception {
+    public static IUserJwtInfo getInfoFromToken(String token, byte[] publicKeyByte) throws Exception {
         PublicKey publicKey = rsaKeyHelper.getPublicKey(publicKeyByte);
         return getInfo(token, publicKey);
     }
 
-    private static String generation(IUserIwtInfo userIwtInfo, PrivateKey privateKey, int expiration) {
+    private static String generation(IUserJwtInfo userIwtInfo, PrivateKey privateKey, int expiration) {
         LocalDateTime localDateTime = LocalDateTime.now().plusSeconds(expiration);
         return Jwts.builder().setSubject(userIwtInfo.getId())
                 .claim(JwtConstant.JWT_KEY_USERNAME, userIwtInfo.getUsername())
@@ -68,7 +66,7 @@ public class JwtHelper {
                 .signWith(SignatureAlgorithm.RS256, privateKey).compact();
     }
 
-    private static IUserIwtInfo getInfo(String token, PublicKey publicKey) {
+    private static IUserJwtInfo getInfo(String token, PublicKey publicKey) {
         Jws<Claims> claimsJws = Jwts.parser().setSigningKey(publicKey)
                 .parseClaimsJws(token);
         Claims claims = claimsJws.getBody();

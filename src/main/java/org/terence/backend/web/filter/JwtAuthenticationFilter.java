@@ -1,5 +1,8 @@
 package org.terence.backend.web.filter;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +12,9 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.terence.backend.common.utils.NullValueUtil;
-import org.terence.backend.common.utils.jwt.IUserIwtInfo;
+import org.terence.backend.common.utils.jwt.IUserJwtInfo;
 import org.terence.backend.common.utils.jwt.JwtHelper;
+import org.terence.backend.service.vo.base.BaseResponse;
 import org.terence.backend.web.config.jwt.UserAuthConfig;
 
 import javax.servlet.FilterChain;
@@ -40,11 +44,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain)
             throws ServletException, IOException {
         final String requestTokenHeader = httpServletRequest.getHeader(userAuthConfig.getHeader());
-        IUserIwtInfo userIwtInfo = null;
+        IUserJwtInfo userIwtInfo = null;
         if (!NullValueUtil.judgeNull(requestTokenHeader)) {
             String authToken = requestTokenHeader.substring(userAuthConfig.getStart().length());
             try {
                 userIwtInfo = JwtHelper.getInfoFromToken(authToken, userAuthConfig.getPublicKeyPath());
+            } catch (ExpiredJwtException e) {
+                logger.error("Token Expired!");
+                httpServletResponse.setStatus(60201);
             } catch (Exception e) {
                 logger.error("Invalid token: {}", authToken, e);
             }
@@ -61,5 +68,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         filterChain.doFilter(httpServletRequest, httpServletResponse);
+    }
+
+    private String convertObjectToJson(BaseResponse baseResponse) throws JsonProcessingException {
+        if (baseResponse == null) {
+            return null;
+        }
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(baseResponse);
     }
 }

@@ -23,6 +23,9 @@ public class UserAuthConfig {
     @Value("${jwt.expiration}")
     private int expiration;
 
+    @Value("${jwt.refresh}")
+    private int refresh;
+
     @Value("${jwt.key.public}")
     private String publicKeyPath;
 

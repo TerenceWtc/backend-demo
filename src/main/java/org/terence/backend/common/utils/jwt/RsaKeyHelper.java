@@ -100,7 +100,7 @@ public class RsaKeyHelper {
         keyPairGenerator.genKeyPair();
     	RsaKeyHelper rsaKeyHelper = new RsaKeyHelper();
     	try {
-			rsaKeyHelper.generateKeys("D:/publicKey", "D:/privateKey", "terence");
+			rsaKeyHelper.generateKeys("D:/public.key", "D:/private.key", "terence");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

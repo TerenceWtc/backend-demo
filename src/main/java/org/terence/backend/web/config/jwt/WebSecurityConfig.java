@@ -20,6 +20,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.terence.backend.common.constant.CommonConstant;
 import org.terence.backend.dao.repository.admin.UserRepository;
 import org.terence.backend.web.filter.JwtAuthenticationFilter;
 
@@ -41,11 +42,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final AccessDecisionVoter<Object> accessDecisionVoter;
 
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+
     @Autowired
-    public WebSecurityConfig(UserRepository userRepository, JwtAuthenticationFilter jwtAuthenticationFilter, AccessDecisionVoter<Object> accessDecisionVoter) {
+    public WebSecurityConfig(UserRepository userRepository, JwtAuthenticationFilter jwtAuthenticationFilter, AccessDecisionVoter<Object> accessDecisionVoter, JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
         this.userRepository = userRepository;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.accessDecisionVoter = accessDecisionVoter;
+        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
     }
 
     @Override
@@ -57,7 +61,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) {
-        web.ignoring().antMatchers(HttpMethod.POST, "/jwt/token");
+        web.ignoring()
+                .antMatchers(HttpMethod.POST, "/auth/login")
+                .antMatchers(HttpMethod.POST, "/auth/register")
+                .antMatchers(HttpMethod.POST, "/auth/refresh");
     }
 
     @Override
@@ -69,6 +76,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .anyRequest().authenticated()
                 .accessDecisionManager(accessDecisionManager())
+                .and()
+                // customize entryPoint to handle exception thrown in JwtAuthenticationFilter
+                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and()
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .headers().cacheControl();
@@ -82,7 +92,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean("passwordEncoder")
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(12);
+        return new BCryptPasswordEncoder(CommonConstant.PASSWORD_ENCORDER_SALT);
     }
 
     @Bean("userDetailService")

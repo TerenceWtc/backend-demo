@@ -1,5 +1,6 @@
 package org.terence.backend.common.utils.jwt;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.terence.backend.common.exception.jwt.TokenExpiredException;
@@ -7,7 +8,6 @@ import org.terence.backend.common.exception.jwt.TokenNullException;
 import org.terence.backend.common.exception.jwt.TokenSignatureException;
 import org.terence.backend.web.config.jwt.UserAuthConfig;
 
-import java.rmi.server.ExportException;
 import java.security.SignatureException;
 
 /**
@@ -24,10 +24,10 @@ public class UserAuthUtil {
         this.userAuthConfig = userAuthConfig;
     }
 
-    public IUserIwtInfo getInfoFromToken(String token) throws Exception {
+    public IUserJwtInfo getInfoFromToken(String token) throws Exception {
         try {
             return JwtHelper.getInfoFromToken(token, userAuthConfig.getPublicKeyPath());
-        } catch (ExportException e) {
+        } catch (ExpiredJwtException e) {
             throw new TokenExpiredException("Token expired!");
         } catch (SignatureException e) {
             throw new TokenSignatureException("Token signature error!");

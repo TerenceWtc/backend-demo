@@ -10,7 +10,7 @@ import org.springframework.security.web.FilterInvocation;
 import org.springframework.stereotype.Component;
 import org.terence.backend.common.exception.jwt.GroupNotAssignedException;
 import org.terence.backend.common.utils.NullValueUtil;
-import org.terence.backend.common.utils.jwt.IUserIwtInfo;
+import org.terence.backend.common.utils.jwt.IUserJwtInfo;
 import org.terence.backend.dao.entity.admin.Group;
 import org.terence.backend.dao.entity.admin.Menu;
 import org.terence.backend.dao.repository.admin.GroupRepository;
@@ -58,10 +58,10 @@ public class CustomizeAccessDecisionVoter implements AccessDecisionVoter {
         }
         int result = ACCESS_ABSTAIN;
         Object principal = authentication.getPrincipal();
-        if (!(principal instanceof IUserIwtInfo)) {
+        if (!(principal instanceof IUserJwtInfo)) {
             return ACCESS_DENIED;
         }
-        String idStr = ((IUserIwtInfo) principal).getId();
+        String idStr = ((IUserJwtInfo) principal).getId();
         long userId = Long.valueOf(idStr);
         HttpServletRequest request = ((FilterInvocation) o).getHttpRequest();
         final String method = request.getMethod();

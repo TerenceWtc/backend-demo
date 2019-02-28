@@ -28,6 +28,9 @@ public class User {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
+    private String email;
+
     private String gender;
 
     private String mobile;
@@ -43,4 +46,22 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "group_id")
     private Group group;
+
+    public User() {
+    }
+
+    public User(String username, String password, String name, String email, Date createTime, String createBy) {
+        this.username = username;
+        this.password = password;
+        this.name = name;
+        this.email = email;
+        this.createTime = createTime;
+        this.createBy = createBy;
+    }
+
+    public User(long id, String username, String name) {
+        this.id = id;
+        this.username = username;
+        this.name = name;
+    }
 }
