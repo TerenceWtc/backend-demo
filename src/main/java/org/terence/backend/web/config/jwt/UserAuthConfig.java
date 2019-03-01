@@ -17,14 +17,17 @@ public class UserAuthConfig {
     @Value("${jwt.start}")
     private String start;
 
-    @Value("${jwt.header}")
-    private String header;
+    @Value("${jwt.accessHeader}")
+    private String accessHeader;
 
-    @Value("${jwt.expiration}")
-    private int expiration;
+    @Value("${jwt.accessExpiration}")
+    private int accessExpiration;
 
-    @Value("${jwt.refresh}")
-    private int refresh;
+    @Value("${jwt.refreshHeader}")
+    private String refreshHeader;
+
+    @Value("${jwt.refreshExpiration}")
+    private int refreshExpiration;
 
     @Value("${jwt.key.public}")
     private String publicKeyPath;

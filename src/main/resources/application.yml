@@ -1,9 +1,10 @@
 jwt:
-  header: Authorization
-  secret: ENC(FsvzyqNit5Lk3w3OcT7RPQ==)
   start: Bearer
-  expiration: 1800
-  refresh: 604800
+  accessHeader: X-access-token
+  accessExpiration: 1800
+  refreshHeader: X-refresh-token
+  refreshExpiration: 604800
+  secret: ENC(FsvzyqNit5Lk3w3OcT7RPQ==)
   key:
     public: rsakey/public.key
     private: rsakey/private.key

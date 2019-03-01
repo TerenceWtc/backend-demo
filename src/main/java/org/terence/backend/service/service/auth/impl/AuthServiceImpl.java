@@ -55,8 +55,8 @@ public class AuthServiceImpl implements AuthService {
             throw new UserInvalidException("Bad credentials!", ExceptionConstant.BAD_CREDENTIALS_CODE);
         }
         User user = userService.getUserByUsername(username);
-        String accessToken = generateToken(user, userAuthConfig.getExpiration());
-        String refreshToken = generateToken(user, userAuthConfig.getRefresh());
+        String accessToken = generateToken(user, userAuthConfig.getAccessExpiration());
+        String refreshToken = generateToken(user, userAuthConfig.getRefreshExpiration());
         return new ObjectResponse<>(new Token(accessToken, refreshToken));
     }
 
@@ -64,14 +64,13 @@ public class AuthServiceImpl implements AuthService {
     public ObjectResponse<Token> register(String username, String password, String name, String email) {
         User user = new User(username, password, name, email, new Date(), "REGISTER");
         User result = userService.registerUser(user);
-        String accessToken = generateToken(result, userAuthConfig.getExpiration());
-        String refreshToken = generateToken(result, userAuthConfig.getRefresh());
+        String accessToken = generateToken(result, userAuthConfig.getAccessExpiration());
+        String refreshToken = generateToken(result, userAuthConfig.getRefreshExpiration());
         return new ObjectResponse<>(new Token(accessToken, refreshToken));
     }
 
     @Override
     public ObjectResponse<String> refresh(String refreshToken) {
-        refreshToken = refreshToken.substring(userAuthConfig.getStart().length());
         IUserJwtInfo userJwtInfo;
         try {
             userJwtInfo = JwtHelper.getInfoFromToken(refreshToken, userAuthConfig.getPublicKeyPath());
@@ -81,7 +80,7 @@ public class AuthServiceImpl implements AuthService {
             throw new TokenException("invalid token");
         }
         User user = new User(Long.valueOf(userJwtInfo.getId()), userJwtInfo.getName(), userJwtInfo.getUsername());
-        return new ObjectResponse<>(generateToken(user, userAuthConfig.getExpiration()));
+        return new ObjectResponse<>(generateToken(user, userAuthConfig.getAccessExpiration()));
     }
 
     private String generateToken(User user, int expiration) {

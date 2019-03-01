@@ -46,7 +46,7 @@ public class AuthController {
      */
     @PostMapping("/refresh")
     public ObjectResponse<String> refresh(HttpServletRequest request) {
-        String refreshToken = request.getHeader(userAuthConfig.getHeader());
+        String refreshToken = request.getHeader(userAuthConfig.getRefreshHeader());
         return authService.refresh(refreshToken);
     }
 
