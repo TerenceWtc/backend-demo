@@ -71,6 +71,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public ObjectResponse<String> refresh(String refreshToken) {
+        refreshToken = refreshToken.substring(userAuthConfig.getStart().length());
         IUserJwtInfo userJwtInfo;
         try {
             userJwtInfo = JwtHelper.getInfoFromToken(refreshToken, userAuthConfig.getPublicKeyPath());

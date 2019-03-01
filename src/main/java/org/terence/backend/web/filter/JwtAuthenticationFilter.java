@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.terence.backend.common.constant.ExceptionConstant;
 import org.terence.backend.common.utils.NullValueUtil;
 import org.terence.backend.common.utils.jwt.IUserJwtInfo;
 import org.terence.backend.common.utils.jwt.JwtHelper;
@@ -51,7 +52,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 userIwtInfo = JwtHelper.getInfoFromToken(authToken, userAuthConfig.getPublicKeyPath());
             } catch (ExpiredJwtException e) {
                 logger.error("Token Expired!");
-                httpServletResponse.setStatus(60201);
+                httpServletResponse.setStatus(ExceptionConstant.TOKEN_EXPIRED_CODE);
             } catch (Exception e) {
                 logger.error("Invalid token: {}", authToken, e);
             }
