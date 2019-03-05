@@ -14,4 +14,6 @@ public interface AuthService {
     ObjectResponse<Token> register(String username, String password, String name, String email);
 
     ObjectResponse<String> refresh(String refreshToken);
+
+    ObjectResponse<Boolean> verifyUsername(String username);
 }

@@ -28,4 +28,5 @@ public class UserController {
     public ObjectResponse<UserVo> getUserInfo(@RequestParam("accessToken") String accessToken) {
         return userService.getUserInfo(accessToken);
     }
+
 }

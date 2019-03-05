@@ -78,4 +78,10 @@ public class UserServiceImpl implements UserService {
         UserVo userVo = new UserVo(user.getId() + "", user.getUsername(), user.getName(), user.getGroup().getId() + "", user.getGroup().getName());
         return new ObjectResponse<>(userVo);
     }
+
+    @Override
+    public boolean verifyUsername(String username) {
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        return userOptional.isPresent();
+    }
 }

@@ -38,6 +38,11 @@ public class AuthController {
         return authService.register(body.get("username"), body.get("password"), body.get("name"), body.get("email"));
     }
 
+    @GetMapping("/verifyUsername")
+    public ObjectResponse<Boolean> verifyUsername(@RequestParam("username") String username) {
+        return authService.verifyUsername(username);
+    }
+
     /**
      * using npm package 'jwt-decode' in Vue to verify token
      * invoke this api to refresh access_token by refresh_token if access_token expired

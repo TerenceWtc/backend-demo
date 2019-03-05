@@ -83,6 +83,12 @@ public class AuthServiceImpl implements AuthService {
         return new ObjectResponse<>(generateToken(user, userAuthConfig.getAccessExpiration()));
     }
 
+    @Override
+    public ObjectResponse<Boolean> verifyUsername(String username) {
+        boolean result = userService.verifyUsername(username);
+        return new ObjectResponse<>(result);
+    }
+
     private String generateToken(User user, int expiration) {
         String token = null;
         try {

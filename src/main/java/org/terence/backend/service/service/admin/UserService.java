@@ -15,4 +15,6 @@ public interface UserService {
     User registerUser(User user);
 
     ObjectResponse<UserVo> getUserInfo(String accessToken);
+
+    boolean verifyUsername(String username);
 }
