@@ -1,7 +1,6 @@
 package org.terence.backend.service.service.admin;
 
 import org.terence.backend.service.vo.admin.MenuVo;
-import org.terence.backend.service.vo.base.ObjectResponse;
 
 import java.util.List;
 
@@ -11,5 +10,5 @@ import java.util.List;
  */
 public interface MenuService {
 
-    ObjectResponse<List<MenuVo>> getMenuList(String accessToken);
+    List<MenuVo> getMenuList(String accessToken);
 }

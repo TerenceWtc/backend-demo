@@ -14,7 +14,6 @@ import org.terence.backend.dao.repository.admin.specification.GroupSpec;
 import org.terence.backend.dao.repository.admin.specification.MenuSpec;
 import org.terence.backend.service.service.admin.MenuService;
 import org.terence.backend.service.vo.admin.MenuVo;
-import org.terence.backend.service.vo.base.ObjectResponse;
 import org.terence.backend.web.config.jwt.UserAuthConfig;
 
 import java.util.List;
@@ -42,22 +41,21 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public ObjectResponse<List<MenuVo>> getMenuList(String accessToken) {
+    public List<MenuVo> getMenuList(String accessToken) {
         IUserJwtInfo userJwtInfo;
         try {
             userJwtInfo = JwtHelper.getInfoFromToken(accessToken, userAuthConfig.getPublicKeyPath());
         } catch (Exception e) {
             throw new TokenException("invalid token");
         }
-        Optional<Group> groupOptional = groupRepository.findOne(GroupSpec.findOneByUserId(Long.valueOf(userJwtInfo.getId())));
+        Optional<Group> groupOptional = groupRepository.findOne(GroupSpec.findOneByUserId(Long.parseLong(userJwtInfo.getId())));
         if (!groupOptional.isPresent()) {
             // TODO
             throw new NullValueException("");
         }
         List<Menu> menuList = menuRepository.findAll(MenuSpec.findAllByGroupId(groupOptional.get().getId()));
-        List<MenuVo> menuVoList = menuList.stream()
+        return menuList.stream()
                 .map(item -> new MenuVo(item.getTitle(), item.getCode(), item.getIcon()))
                 .collect(Collectors.toList());
-        return new ObjectResponse<>(menuVoList);
     }
 }

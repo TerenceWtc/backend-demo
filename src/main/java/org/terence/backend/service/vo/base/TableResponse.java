@@ -10,7 +10,9 @@ import lombok.NonNull;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class TableResponse<T> extends BaseResponse {
+public class TableResponse<T> extends BaseResponse{
+
+    private static final long serialVersionUID = -1897129837422532699L;
 
     @NonNull
     TableData<T> data;

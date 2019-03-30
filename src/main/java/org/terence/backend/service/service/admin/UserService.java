@@ -2,7 +2,8 @@ package org.terence.backend.service.service.admin;
 
 import org.terence.backend.dao.entity.admin.User;
 import org.terence.backend.service.vo.admin.UserVo;
-import org.terence.backend.service.vo.base.ObjectResponse;
+
+import java.util.List;
 
 /**
  * @author terence
@@ -14,7 +15,13 @@ public interface UserService {
 
     User registerUser(User user);
 
-    ObjectResponse<UserVo> getUserInfo(String accessToken);
+    UserVo getUserInfo(String accessToken);
 
     boolean verifyUsername(String username);
+
+    List<UserVo> getList();
+
+    User updateUser(User user);
+
+    void deleteUser(String username);
 }

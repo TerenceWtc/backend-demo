@@ -28,6 +28,7 @@ public class MenuController {
 
     @GetMapping("getMenuList")
     public ObjectResponse<List<MenuVo>> getMenuList(@RequestParam("accessToken") String accessToken) {
-        return menuService.getMenuList(accessToken);
+        List<MenuVo> menuVoList = menuService.getMenuList(accessToken);
+        return new ObjectResponse<>(menuVoList);
     }
 }

@@ -30,17 +30,20 @@ public class AuthController {
 
     @PostMapping("/login")
     public ObjectResponse<Token> login(@RequestBody Map<String, String> body) {
-        return authService.login(body.get("username"), body.get("password"));
+        Token token = authService.login(body.get("username"), body.get("password"));
+        return new ObjectResponse<>(token);
     }
 
     @PostMapping("/register")
     public ObjectResponse<Token> register(@RequestBody Map<String, String> body) {
-        return authService.register(body.get("username"), body.get("password"), body.get("name"), body.get("email"));
+        Token token = authService.register(body.get("username"), body.get("password"), body.get("name"), body.get("email"));
+        return new ObjectResponse<>(token);
     }
 
     @GetMapping("/verifyUsername")
     public ObjectResponse<Boolean> verifyUsername(@RequestParam("username") String username) {
-        return authService.verifyUsername(username);
+        boolean result = authService.verifyUsername(username);;
+        return new ObjectResponse<>(result);
     }
 
     /**
@@ -52,7 +55,8 @@ public class AuthController {
     @PostMapping("/refresh")
     public ObjectResponse<String> refresh(HttpServletRequest request) {
         String refreshToken = request.getHeader(userAuthConfig.getRefreshHeader());
-        return authService.refresh(refreshToken);
+        String accessToken = authService.refresh(refreshToken);
+        return new ObjectResponse<>(accessToken);
     }
 
     @GetMapping("/test")

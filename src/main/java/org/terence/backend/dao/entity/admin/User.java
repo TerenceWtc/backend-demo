@@ -4,7 +4,8 @@ import lombok.Data;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.io.Serializable;
+import java.sql.Date;
 
 /**
  * @author terence
@@ -13,13 +14,15 @@ import java.util.Date;
 @Data
 @ToString(exclude = "group")
 @Entity(name = "base_user")
-public class User {
+public class User implements Serializable {
+
+    private static final long serialVersionUID = -2308494806205517973L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String username;
 
     @Column(nullable = false)

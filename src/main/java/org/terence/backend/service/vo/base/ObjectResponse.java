@@ -11,6 +11,8 @@ import lombok.EqualsAndHashCode;
 @Data
 public class ObjectResponse<T> extends BaseResponse {
 
+    private static final long serialVersionUID = -7019854057783151041L;
+
     T data;
 
     public ObjectResponse() {

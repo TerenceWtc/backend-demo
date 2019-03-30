@@ -5,6 +5,7 @@ import lombok.ToString;
 import org.terence.backend.common.constant.CommonConstant;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -15,7 +16,9 @@ import java.util.List;
 @Data
 @ToString(exclude = "group")
 @Entity(name = "base_menu")
-public class Menu {
+public class Menu implements Serializable {
+
+    private static final long serialVersionUID = -3917945599306780941L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +31,7 @@ public class Menu {
 
     private int parentId = CommonConstant.ROOT;
 
+//    @Column(nullable = false)
     private String href;
 
     private String icon;

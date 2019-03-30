@@ -9,11 +9,11 @@ import org.terence.backend.service.vo.base.ObjectResponse;
  */
 public interface AuthService {
 
-    ObjectResponse<Token> login(String username, String password);
+    Token login(String username, String password);
 
-    ObjectResponse<Token> register(String username, String password, String name, String email);
+    Token register(String username, String password, String name, String email);
 
-    ObjectResponse<String> refresh(String refreshToken);
+    String refresh(String refreshToken);
 
-    ObjectResponse<Boolean> verifyUsername(String username);
+    Boolean verifyUsername(String username);
 }

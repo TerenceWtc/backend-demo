@@ -1,6 +1,10 @@
 package org.terence.backend.service.service.admin.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.terence.backend.common.constant.CommonConstant;
@@ -16,8 +20,12 @@ import org.terence.backend.dao.repository.admin.specification.GroupSpec;
 import org.terence.backend.service.service.admin.UserService;
 import org.terence.backend.service.vo.admin.UserVo;
 import org.terence.backend.service.vo.base.ObjectResponse;
+import org.terence.backend.service.vo.base.TableData;
+import org.terence.backend.service.vo.base.TableResponse;
 import org.terence.backend.web.config.jwt.UserAuthConfig;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -41,6 +49,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+//    @Cacheable(value = "user", key = "#p0")
     public User getUserByUsername(String username) {
         Optional<User> user = userRepository.findByUsername(username);
         return user.orElse(null);
@@ -60,7 +69,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ObjectResponse<UserVo> getUserInfo(String accessToken) {
+    public UserVo getUserInfo(String accessToken) {
         IUserJwtInfo userJwtInfo;
         try {
             userJwtInfo = JwtHelper.getInfoFromToken(accessToken, userAuthConfig.getPublicKeyPath());
@@ -75,13 +84,34 @@ public class UserServiceImpl implements UserService {
             // TODO
             throw new NullValueException("");
         }
-        UserVo userVo = new UserVo(user.getId() + "", user.getUsername(), user.getName(), user.getGroup().getId() + "", user.getGroup().getName());
-        return new ObjectResponse<>(userVo);
+        return new UserVo(user.getId() + "", user.getUsername(), user.getName(), user.getGroup().getId() + "", user.getGroup().getName());
     }
 
     @Override
     public boolean verifyUsername(String username) {
         Optional<User> userOptional = userRepository.findByUsername(username);
         return userOptional.isPresent();
+    }
+
+    @Override
+    public List<UserVo> getList() {
+        List<User> userList = userRepository.findAll();
+        List<UserVo> userVos = new ArrayList<>();
+        userList.forEach(user -> userVos.add(new UserVo(user.getId() + "", user.getUsername(), user.getName(), user.getGroup().getId() + "", user.getGroup().getName())));
+        return userVos;
+    }
+
+    @Override
+//    @CachePut(value = "user", key = "#p0.username")
+    public User updateUser(User user) {
+        return userRepository.save(user);
+    }
+
+
+    @Override
+//    @CacheEvict(value = "user", key = "#p0")
+    public void deleteUser(String username) {
+//        userRepository.deleteByUsername(username);
+        System.out.println("delete user: " + username);
     }
 }

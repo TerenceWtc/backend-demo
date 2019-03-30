@@ -21,7 +21,8 @@ import org.terence.backend.service.vo.auth.Token;
 import org.terence.backend.service.vo.base.ObjectResponse;
 import org.terence.backend.web.config.jwt.UserAuthConfig;
 
-import java.util.Date;
+import java.sql.Date;
+import java.time.LocalDate;
 
 /**
  * @author terence
@@ -44,33 +45,33 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public ObjectResponse<Token> login(String username, String password) {
+    public Token login(String username, String password) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (UsernameNotFoundException e) {
             // thrown exception when username is not found
             throw new UserInvalidException("Username not found!", ExceptionConstant.USERNAME_NOT_FOUND_CODE);
         } catch (BadCredentialsException e) {
-            // 认证失败，一般是密码错误
+            // authorization failed, usually invalid password
             throw new UserInvalidException("Bad credentials!", ExceptionConstant.BAD_CREDENTIALS_CODE);
         }
         User user = userService.getUserByUsername(username);
         String accessToken = generateToken(user, userAuthConfig.getAccessExpiration());
         String refreshToken = generateToken(user, userAuthConfig.getRefreshExpiration());
-        return new ObjectResponse<>(new Token(accessToken, refreshToken));
+        return new Token(accessToken, refreshToken);
     }
 
     @Override
-    public ObjectResponse<Token> register(String username, String password, String name, String email) {
-        User user = new User(username, password, name, email, new Date(), "REGISTER");
+    public Token register(String username, String password, String name, String email) {
+        User user = new User(username, password, name, email, Date.valueOf(LocalDate.now()), "REGISTER");
         User result = userService.registerUser(user);
         String accessToken = generateToken(result, userAuthConfig.getAccessExpiration());
         String refreshToken = generateToken(result, userAuthConfig.getRefreshExpiration());
-        return new ObjectResponse<>(new Token(accessToken, refreshToken));
+        return new Token(accessToken, refreshToken);
     }
 
     @Override
-    public ObjectResponse<String> refresh(String refreshToken) {
+    public String refresh(String refreshToken) {
         IUserJwtInfo userJwtInfo;
         try {
             userJwtInfo = JwtHelper.getInfoFromToken(refreshToken, userAuthConfig.getPublicKeyPath());
@@ -79,14 +80,13 @@ public class AuthServiceImpl implements AuthService {
         } catch (Exception e) {
             throw new TokenException("invalid token");
         }
-        User user = new User(Long.valueOf(userJwtInfo.getId()), userJwtInfo.getName(), userJwtInfo.getUsername());
-        return new ObjectResponse<>(generateToken(user, userAuthConfig.getAccessExpiration()));
+        User user = new User(Long.parseLong(userJwtInfo.getId()), userJwtInfo.getName(), userJwtInfo.getUsername());
+        return generateToken(user, userAuthConfig.getAccessExpiration());
     }
 
     @Override
-    public ObjectResponse<Boolean> verifyUsername(String username) {
-        boolean result = userService.verifyUsername(username);
-        return new ObjectResponse<>(result);
+    public Boolean verifyUsername(String username) {
+        return userService.verifyUsername(username);
     }
 
     private String generateToken(User user, int expiration) {
