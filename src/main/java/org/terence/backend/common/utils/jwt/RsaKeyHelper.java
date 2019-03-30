@@ -3,6 +3,7 @@ package org.terence.backend.common.utils.jwt;
 import org.terence.backend.common.utils.NullValueUtil;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -70,7 +71,7 @@ public class RsaKeyHelper {
      */
     public void generateKeys(String publicKeyFilename, String privateKeyFilename, String password) throws IOException, NoSuchAlgorithmException {
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-        SecureRandom secureRandom = new SecureRandom(password.getBytes());
+        SecureRandom secureRandom = new SecureRandom(password.getBytes(StandardCharsets.UTF_8));
         keyPairGenerator.initialize(1024, secureRandom);
         KeyPair keyPair = keyPairGenerator.genKeyPair();
         byte[] publicKeyBytes = keyPair.getPublic().getEncoded();
@@ -95,7 +96,7 @@ public class RsaKeyHelper {
 
     public static void main(String[] args) throws NoSuchAlgorithmException {
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-        SecureRandom secureRandom = new SecureRandom("123".getBytes());
+        SecureRandom secureRandom = new SecureRandom("123".getBytes(StandardCharsets.UTF_8));
         keyPairGenerator.initialize(1024, secureRandom);
         keyPairGenerator.genKeyPair();
     	RsaKeyHelper rsaKeyHelper = new RsaKeyHelper();

@@ -62,7 +62,7 @@ public class JwtHelper {
         return Jwts.builder().setSubject(userIwtInfo.getId())
                 .claim(JwtConstant.JWT_KEY_USERNAME, userIwtInfo.getUsername())
                 .claim(JwtConstant.JWT_KEY_NAME, userIwtInfo.getName())
-                .setExpiration(TimeConvertUtil.LocalDateTime2Date(localDateTime))
+                .setExpiration(TimeConvertUtil.localDateTime2Date(localDateTime))
                 .signWith(SignatureAlgorithm.RS256, privateKey).compact();
     }
 

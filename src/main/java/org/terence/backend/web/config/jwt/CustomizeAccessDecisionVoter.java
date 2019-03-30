@@ -62,7 +62,7 @@ public class CustomizeAccessDecisionVoter implements AccessDecisionVoter {
             return ACCESS_DENIED;
         }
         String idStr = ((IUserJwtInfo) principal).getId();
-        long userId = Long.valueOf(idStr);
+        long userId = Long.parseLong(idStr);
         HttpServletRequest request = ((FilterInvocation) o).getHttpRequest();
         final String method = request.getMethod();
         final String requestURI = request.getRequestURI();

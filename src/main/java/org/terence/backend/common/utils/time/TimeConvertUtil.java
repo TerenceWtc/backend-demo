@@ -13,7 +13,7 @@ import java.util.Date;
  */
 public class TimeConvertUtil {
 
-    public static Date LocalDateTime2Date(LocalDateTime localDateTime) {
+    public static Date localDateTime2Date(LocalDateTime localDateTime) {
         NullValueUtil.handleNull(localDateTime);
         ZoneId zoneId = ZoneId.systemDefault();
         ZonedDateTime zonedDateTime = localDateTime.atZone(zoneId);
