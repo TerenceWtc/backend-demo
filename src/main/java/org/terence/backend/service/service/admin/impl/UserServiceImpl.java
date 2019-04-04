@@ -5,6 +5,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.terence.backend.common.constant.CommonConstant;
@@ -12,6 +13,7 @@ import org.terence.backend.common.exception.jwt.TokenException;
 import org.terence.backend.common.exception.util.NullValueException;
 import org.terence.backend.common.utils.jwt.IUserJwtInfo;
 import org.terence.backend.common.utils.jwt.JwtHelper;
+import org.terence.backend.common.utils.orika.BeanFormat;
 import org.terence.backend.dao.entity.admin.Group;
 import org.terence.backend.dao.entity.admin.User;
 import org.terence.backend.dao.repository.admin.GroupRepository;
@@ -20,10 +22,13 @@ import org.terence.backend.dao.repository.admin.specification.GroupSpec;
 import org.terence.backend.service.service.admin.UserService;
 import org.terence.backend.service.vo.admin.UserVo;
 import org.terence.backend.service.vo.base.ObjectResponse;
+import org.terence.backend.service.vo.base.PageVo;
 import org.terence.backend.service.vo.base.TableData;
 import org.terence.backend.service.vo.base.TableResponse;
 import org.terence.backend.web.config.jwt.UserAuthConfig;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -94,24 +99,55 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserVo> getList() {
-        List<User> userList = userRepository.findAll();
+    public TableData<UserVo> getList(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<User> userPage = userRepository.findAll(pageRequest);
         List<UserVo> userVos = new ArrayList<>();
-        userList.forEach(user -> userVos.add(new UserVo(user.getId() + "", user.getUsername(), user.getName(), user.getGroup().getId() + "", user.getGroup().getName())));
-        return userVos;
+        userPage.getContent().forEach(user -> userVos.add(new UserVo(user.getId() + "", user.getUsername(), user.getName(), user.getGroup().getId() + "", user.getGroup().getName())));
+
+        return new TableData<>(userPage.getTotalElements(), userVos);
     }
 
     @Override
 //    @CachePut(value = "user", key = "#p0.username")
-    public User updateUser(User user) {
-        return userRepository.save(user);
+    public void updateUser(UserVo userVo) {
+        // TODO:增量更新
+        User userNew = BeanFormat.formatUserAndUserVo().getMapperFacade().map(userVo, User.class);
+        Optional<User> userOld = userRepository.findById(userNew.getId());
+        if (userOld.isPresent()) {
+            User user = userOld.get();
+            BeanFormat.formatUser().getMapperFacade().map(userNew, user);
+            userRepository.save(user);
+        }
     }
 
 
     @Override
 //    @CacheEvict(value = "user", key = "#p0")
-    public void deleteUser(String username) {
-//        userRepository.deleteByUsername(username);
-        System.out.println("delete user: " + username);
+    public void deleteUserById(long id) {
+        userRepository.deleteById(id);
+//        System.out.println("delete user: " + id);
+    }
+
+    @Override
+    public User getUserById(long id) {
+        Optional<User> user = userRepository.findById(id);
+        return user.orElse(null);
+    }
+
+    @Override
+    public void addUser(UserVo userVo) {
+        User user = BeanFormat.formatUserAndUserVo().getMapperFacade().map(userVo, User.class);
+        user.setCreateTime(Date.valueOf(LocalDate.now()));
+        user.setCreateBy("admin");
+        Optional<Group> group = groupRepository.findById(user.getGroup().getId());
+        if (group.isPresent()) {
+            user.setGroup(group.get());
+        } else {
+            // TODO
+            throw new NullValueException("");
+        }
+        user.setPassword(new BCryptPasswordEncoder(CommonConstant.PASSWORD_ENCORDER_SALT).encode(user.getPassword()));
+        userRepository.save(user);
     }
 }

@@ -42,7 +42,7 @@ public class AuthController {
 
     @GetMapping("/verifyUsername")
     public ObjectResponse<Boolean> verifyUsername(@RequestParam("username") String username) {
-        boolean result = authService.verifyUsername(username);;
+        boolean result = authService.verifyUsername(username);
         return new ObjectResponse<>(result);
     }
 

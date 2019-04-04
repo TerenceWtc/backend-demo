@@ -53,6 +53,7 @@ public class User implements Serializable {
     public User() {
     }
 
+    // TODO: to be delete
     public User(String username, String password, String name, String email, Date createTime, String createBy) {
         this.username = username;
         this.password = password;
@@ -62,9 +63,31 @@ public class User implements Serializable {
         this.createBy = createBy;
     }
 
+    // constructor for refresh token
     public User(long id, String username, String name) {
         this.id = id;
         this.username = username;
         this.name = name;
     }
+
+//    // constructor for register / add
+//    public User(String username, String password, String name, String email, String gender, String mobile, Group group) {
+//        this.username = username;
+//        this.password = password;
+//        this.name = name;
+//        this.email = email;
+//        this.gender = gender;
+//        this.mobile = mobile;
+//        this.group = group;
+//    }
+//
+//    // constructor for detail
+//    public User(String username, String name, String email, String gender, String mobile, Group group) {
+//        this.username = username;
+//        this.name = name;
+//        this.email = email;
+//        this.gender = gender;
+//        this.mobile = mobile;
+//        this.group.setId(group.getId());
+//    }
 }

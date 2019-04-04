@@ -21,9 +21,27 @@ public class UserVo implements Serializable {
 
     private String username;
 
+    private String password;
+
     private String name;
+
+    private String email;
+
+    private String gender;
+
+    private String mobile;
+
+    private String description;
 
     private String groupId;
 
     private String groupName;
+
+    public UserVo(String userId, String username, String name, String groupId, String groupName) {
+        this.userId = userId;
+        this.username = username;
+        this.name = name;
+        this.groupId = groupId;
+        this.groupName = groupName;
+    }
 }

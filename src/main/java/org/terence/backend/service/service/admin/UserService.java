@@ -2,8 +2,7 @@ package org.terence.backend.service.service.admin;
 
 import org.terence.backend.dao.entity.admin.User;
 import org.terence.backend.service.vo.admin.UserVo;
-
-import java.util.List;
+import org.terence.backend.service.vo.base.TableData;
 
 /**
  * @author terence
@@ -19,9 +18,13 @@ public interface UserService {
 
     boolean verifyUsername(String username);
 
-    List<UserVo> getList();
+    TableData<UserVo> getList(int page, int size);
 
-    User updateUser(User user);
+    void updateUser(UserVo userVo);
 
-    void deleteUser(String username);
+    void deleteUserById(long id);
+
+    User getUserById(long id);
+
+    void addUser(UserVo userVo);
 }

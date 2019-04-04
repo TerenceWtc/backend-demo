@@ -6,20 +6,46 @@ import ma.glasnost.orika.metadata.ClassMapBuilder;
 import org.terence.backend.dao.entity.admin.User;
 import org.terence.backend.service.vo.admin.UserVo;
 
+import java.util.Optional;
+
 /**
  * @author terence
  * @since 2019/2/28 16:55
  */
 public class BeanFormat {
 
-    public static UserVo formatUser(User user) {
+    public static MapperFactory formatUser() {
+        MapperFactory factory = new DefaultMapperFactory.Builder().mapNulls(false).build();
+        ClassMapBuilder<User, User> builder = factory.classMap(User.class, User.class);
+        builder.byDefault().register();
+        return factory;
+    }
+
+    public static UserVo formatUserWithoutPwd(User user) {
         MapperFactory factory = new DefaultMapperFactory.Builder().build();
         ClassMapBuilder<User, UserVo> builder = factory.classMap(User.class, UserVo.class);
         builder
                 .field("id", "userId")
+                .field("username", "username")
+                .field("name", "name")
+                .field("email", "email")
+                .field("gender", "gender")
+                .field("mobile", "mobile")
+                .field("description", "description")
                 .field("group.id", "groupId")
                 .field("group.name", "groupName");
-        builder.byDefault().register();
+        builder.register();
         return factory.getMapperFacade().map(user, UserVo.class);
+    }
+
+    public static MapperFactory formatUserAndUserVo() {
+        MapperFactory factory = new DefaultMapperFactory.Builder().build();
+        ClassMapBuilder<UserVo, User> builder = factory.classMap(UserVo.class, User.class);
+        builder
+                .field("userId", "id")
+                .field("groupId", "group.id")
+                .field("groupName", "group.name");
+        builder.byDefault().register();
+        return factory;
     }
 }
