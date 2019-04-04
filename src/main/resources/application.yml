@@ -21,6 +21,12 @@ spring:
     hibernate:
       ddl-auto: update
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+  redis:
+    host: 192.168.17.128
+    database: 0
+    port: 6379
+    timeout: 1000
+    password:
 jasypt:
   encryptor:
     password: awwbwg
