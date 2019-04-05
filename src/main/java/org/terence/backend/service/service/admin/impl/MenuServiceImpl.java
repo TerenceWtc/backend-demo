@@ -3,21 +3,18 @@ package org.terence.backend.service.service.admin.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.terence.backend.common.exception.jwt.TokenException;
-import org.terence.backend.common.exception.util.NullValueException;
 import org.terence.backend.common.utils.jwt.IUserJwtInfo;
 import org.terence.backend.common.utils.jwt.JwtHelper;
 import org.terence.backend.dao.entity.admin.Group;
 import org.terence.backend.dao.entity.admin.Menu;
-import org.terence.backend.dao.repository.admin.GroupRepository;
 import org.terence.backend.dao.repository.admin.MenuRepository;
-import org.terence.backend.dao.repository.admin.specification.GroupSpec;
 import org.terence.backend.dao.repository.admin.specification.MenuSpec;
+import org.terence.backend.service.service.admin.GroupService;
 import org.terence.backend.service.service.admin.MenuService;
 import org.terence.backend.service.vo.admin.MenuVo;
 import org.terence.backend.web.config.jwt.UserAuthConfig;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -31,13 +28,13 @@ public class MenuServiceImpl implements MenuService {
 
     private final MenuRepository menuRepository;
 
-    private final GroupRepository groupRepository;
+    private final GroupService groupService;
 
     @Autowired
-    public MenuServiceImpl(UserAuthConfig userAuthConfig, MenuRepository menuRepository, GroupRepository groupRepository) {
+    public MenuServiceImpl(UserAuthConfig userAuthConfig, GroupService groupService, MenuRepository menuRepository) {
         this.userAuthConfig = userAuthConfig;
+        this.groupService = groupService;
         this.menuRepository = menuRepository;
-        this.groupRepository = groupRepository;
     }
 
     @Override
@@ -48,12 +45,8 @@ public class MenuServiceImpl implements MenuService {
         } catch (Exception e) {
             throw new TokenException("invalid token");
         }
-        Optional<Group> groupOptional = groupRepository.findOne(GroupSpec.findOneByUserId(Long.parseLong(userJwtInfo.getId())));
-        if (!groupOptional.isPresent()) {
-            // TODO
-            throw new NullValueException("");
-        }
-        List<Menu> menuList = menuRepository.findAll(MenuSpec.findAllByGroupId(groupOptional.get().getId()));
+        Group group = groupService.getGroupByUserId(Long.parseLong(userJwtInfo.getId()));
+        List<Menu> menuList = menuRepository.findAll(MenuSpec.findAllByGroupId(group.getId()));
         return menuList.stream()
                 .map(item -> new MenuVo(item.getTitle(), item.getCode(), item.getIcon()))
                 .collect(Collectors.toList());

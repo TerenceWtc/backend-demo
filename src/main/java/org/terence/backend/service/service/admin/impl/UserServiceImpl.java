@@ -1,9 +1,6 @@
 package org.terence.backend.service.service.admin.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,15 +13,11 @@ import org.terence.backend.common.utils.jwt.JwtHelper;
 import org.terence.backend.common.utils.orika.BeanFormat;
 import org.terence.backend.dao.entity.admin.Group;
 import org.terence.backend.dao.entity.admin.User;
-import org.terence.backend.dao.repository.admin.GroupRepository;
 import org.terence.backend.dao.repository.admin.UserRepository;
-import org.terence.backend.dao.repository.admin.specification.GroupSpec;
+import org.terence.backend.service.service.admin.GroupService;
 import org.terence.backend.service.service.admin.UserService;
 import org.terence.backend.service.vo.admin.UserVo;
-import org.terence.backend.service.vo.base.ObjectResponse;
-import org.terence.backend.service.vo.base.PageVo;
 import org.terence.backend.service.vo.base.TableData;
-import org.terence.backend.service.vo.base.TableResponse;
 import org.terence.backend.web.config.jwt.UserAuthConfig;
 
 import java.sql.Date;
@@ -42,15 +35,15 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
-    private final GroupRepository groupRepository;
-
     private final UserAuthConfig userAuthConfig;
 
+    private final GroupService groupService;
+
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, GroupRepository groupRepository, UserAuthConfig userAuthConfig) {
+    public UserServiceImpl(UserRepository userRepository, UserAuthConfig userAuthConfig, GroupService groupService) {
         this.userRepository = userRepository;
-        this.groupRepository = groupRepository;
         this.userAuthConfig = userAuthConfig;
+        this.groupService = groupService;
     }
 
     @Override
@@ -62,13 +55,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User registerUser(User user) {
-        Optional<Group> group = groupRepository.findById(-1L);
-        if (group.isPresent()) {
-            user.setGroup(group.get());
-        } else {
-            // TODO
-            throw new NullValueException("");
-        }
+        Group group = groupService.getGroupById(-1L);
+        user.setGroup(group);
         user.setPassword(new BCryptPasswordEncoder(CommonConstant.PASSWORD_ENCORDER_SALT).encode(user.getPassword()));
         return userRepository.save(user);
     }
@@ -140,13 +128,8 @@ public class UserServiceImpl implements UserService {
         User user = BeanFormat.formatUserAndUserVo().getMapperFacade().map(userVo, User.class);
         user.setCreateTime(Date.valueOf(LocalDate.now()));
         user.setCreateBy("admin");
-        Optional<Group> group = groupRepository.findById(user.getGroup().getId());
-        if (group.isPresent()) {
-            user.setGroup(group.get());
-        } else {
-            // TODO
-            throw new NullValueException("");
-        }
+        Group group = groupService.getGroupById(-1L);
+        user.setGroup(group);
         user.setPassword(new BCryptPasswordEncoder(CommonConstant.PASSWORD_ENCORDER_SALT).encode(user.getPassword()));
         userRepository.save(user);
     }
