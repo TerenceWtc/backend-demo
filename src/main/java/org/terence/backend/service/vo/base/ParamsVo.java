@@ -4,22 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 /**
  * @author terence
- * @since 2019/4/2 11:09
+ * @since 2019/4/11 11:32
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PageVo {
+public class ParamsVo {
 
-    private int page;
+    private String direction;
 
-    private int size;
+    private String property;
 
-    private int total;
-
-    private List<ParamsVo> paramsVoList;
 }

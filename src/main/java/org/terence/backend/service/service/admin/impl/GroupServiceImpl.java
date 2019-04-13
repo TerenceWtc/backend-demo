@@ -7,6 +7,7 @@ import org.terence.backend.dao.repository.admin.GroupRepository;
 import org.terence.backend.dao.repository.admin.specification.GroupSpec;
 import org.terence.backend.service.service.admin.GroupService;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -33,5 +34,11 @@ public class GroupServiceImpl implements GroupService {
     public Group getGroupByUserId(long userId) {
         Optional<Group> group = groupRepository.findOne(GroupSpec.findOneByUserId(userId));
         return group.orElse(null);
+    }
+
+    @Override
+    public List<Group> getGroupIdAndName() {
+        List<Group> groupList = groupRepository.findAll();
+        return groupList;
     }
 }

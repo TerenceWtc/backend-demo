@@ -13,7 +13,7 @@ import java.util.List;
  * @since 2019/2/20 10:15
  */
 @Data
-@ToString(exclude = "user")
+@ToString(exclude = {"user", "menu"})
 @Entity(name = "base_group")
 public class Group implements Serializable {
 

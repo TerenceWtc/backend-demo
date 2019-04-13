@@ -1,5 +1,7 @@
 package org.terence.backend.service.service.admin.impl;
 
+import com.alibaba.fastjson.JSONArray;
+import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,12 +16,16 @@ import org.terence.backend.common.utils.orika.BeanFormat;
 import org.terence.backend.dao.entity.admin.Group;
 import org.terence.backend.dao.entity.admin.User;
 import org.terence.backend.dao.repository.admin.UserRepository;
+import org.terence.backend.dao.repository.admin.specification.UserSpec;
 import org.terence.backend.service.service.admin.GroupService;
 import org.terence.backend.service.service.admin.UserService;
 import org.terence.backend.service.vo.admin.UserVo;
+import org.terence.backend.service.vo.base.ParamsVo;
 import org.terence.backend.service.vo.base.TableData;
 import org.terence.backend.web.config.jwt.UserAuthConfig;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -87,13 +93,31 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public TableData<UserVo> getList(int page, int size) {
+    public TableData<UserVo> getList(int page, int size, List<ParamsVo> paramsVoList) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Page<User> userPage = userRepository.findAll(pageRequest);
+        Page<User> userPage = userRepository.findAll(UserSpec.searchAll(paramsVoList), pageRequest);
         List<UserVo> userVos = new ArrayList<>();
         userPage.getContent().forEach(user -> userVos.add(new UserVo(user.getId() + "", user.getUsername(), user.getName(), user.getGroup().getId() + "", user.getGroup().getName())));
 
         return new TableData<>(userPage.getTotalElements(), userVos);
+    }
+
+    @Override
+    public void addUser(UserVo userVo) {
+        User user = BeanFormat.formatUserAndUserVo().getMapperFacade().map(userVo, User.class);
+        user.setCreateTime(Date.valueOf(LocalDate.now()));
+        user.setCreateBy("admin");
+        Group group = groupService.getGroupById(-1L);
+        user.setGroup(group);
+        user.setPassword(new BCryptPasswordEncoder(CommonConstant.PASSWORD_ENCORDER_SALT).encode(user.getPassword()));
+        userRepository.save(user);
+    }
+
+    @Override
+//    @CacheEvict(value = "user", key = "#p0")
+    public void deleteUserById(long id) {
+        userRepository.deleteById(id);
+//        System.out.println("delete user: " + id);
     }
 
     @Override
@@ -109,28 +133,9 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-
-    @Override
-//    @CacheEvict(value = "user", key = "#p0")
-    public void deleteUserById(long id) {
-        userRepository.deleteById(id);
-//        System.out.println("delete user: " + id);
-    }
-
     @Override
     public User getUserById(long id) {
         Optional<User> user = userRepository.findById(id);
         return user.orElse(null);
-    }
-
-    @Override
-    public void addUser(UserVo userVo) {
-        User user = BeanFormat.formatUserAndUserVo().getMapperFacade().map(userVo, User.class);
-        user.setCreateTime(Date.valueOf(LocalDate.now()));
-        user.setCreateBy("admin");
-        Group group = groupService.getGroupById(-1L);
-        user.setGroup(group);
-        user.setPassword(new BCryptPasswordEncoder(CommonConstant.PASSWORD_ENCORDER_SALT).encode(user.getPassword()));
-        userRepository.save(user);
     }
 }
