@@ -4,8 +4,10 @@ import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 import ma.glasnost.orika.metadata.ClassMapBuilder;
 import org.terence.backend.dao.entity.admin.Group;
+import org.terence.backend.dao.entity.admin.Menu;
 import org.terence.backend.dao.entity.admin.User;
 import org.terence.backend.service.vo.admin.GroupVo;
+import org.terence.backend.service.vo.admin.MenuVo;
 import org.terence.backend.service.vo.admin.UserVo;
 
 import java.util.Optional;
@@ -55,6 +57,13 @@ public class BeanFormat {
         MapperFactory factory = new DefaultMapperFactory.Builder().mapNulls(false).build();
         ClassMapBuilder<Group, GroupVo> builder = factory.classMap(Group.class, GroupVo.class);
         builder.field("id", "groupId");
+        builder.byDefault().register();
+        return factory;
+    }
+
+    public static MapperFactory formatMenuVo() {
+        MapperFactory factory = new DefaultMapperFactory.Builder().mapNulls(false).build();
+        ClassMapBuilder<Menu, MenuVo> builder = factory.classMap(Menu.class, MenuVo.class);
         builder.byDefault().register();
         return factory;
     }

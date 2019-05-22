@@ -1,5 +1,6 @@
 package org.terence.backend.service.service.admin;
 
+import org.springframework.stereotype.Service;
 import org.terence.backend.dao.entity.admin.User;
 import org.terence.backend.service.vo.admin.UserVo;
 import org.terence.backend.service.vo.base.ParamsVo;
