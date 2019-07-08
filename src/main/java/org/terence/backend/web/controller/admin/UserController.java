@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.terence.backend.common.utils.orika.BeanFormat;
 import org.terence.backend.common.utils.orika.JsonFormat;
-import org.terence.backend.dao.entity.admin.User;
+import org.terence.backend.dao.entity.admin.SysUser;
 import org.terence.backend.service.service.admin.UserService;
 import org.terence.backend.service.vo.admin.UserVo;
 import org.terence.backend.service.vo.base.*;
@@ -24,9 +24,14 @@ public class UserController {
         this.userService = userService;
     }
 
+    /**
+     * Return current sysUser insensitive information
+     * @param accessToken: jwt access token
+     * @return UserVo
+     */
     @GetMapping("getUserInfo")
     public ObjectResponse<UserVo> getUserInfo(@RequestParam("accessToken") String accessToken) {
-        UserVo userVo =  userService.getUserInfo(accessToken);
+        UserVo userVo = userService.getUserInfo(accessToken);
         return new ObjectResponse<>(userVo);
     }
 
@@ -57,8 +62,8 @@ public class UserController {
 
     @GetMapping("{id}")
     public ObjectResponse<UserVo> getUser(@PathVariable long id) {
-        User user = userService.getUserById(id);
-        UserVo userVo = BeanFormat.formatUserWithoutPwd(user);
+        SysUser sysUser = userService.getUserById(id);
+        UserVo userVo = BeanFormat.formatUserWithoutPwd(sysUser);
         return new ObjectResponse<>(userVo);
     }
 

@@ -1,12 +1,8 @@
 package org.terence.backend.controller;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.terence.backend.dao.entity.admin.Group;
-import org.terence.backend.dao.entity.admin.Menu;
+import org.terence.backend.dao.entity.admin.SysGroup;
+import org.terence.backend.dao.entity.admin.SysMenu;
 import org.terence.backend.dao.repository.admin.GroupRepository;
 import org.terence.backend.dao.repository.admin.MenuRepository;
 import org.terence.backend.dao.repository.admin.specification.MenuSpec;
@@ -15,14 +11,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * @Author: terence
  * @Date: 2019/2/25 10:42
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest
+//@RunWith(SpringRunner.class)
+//@SpringBootTest
 public class MenuTest {
 
     @Autowired
@@ -31,76 +26,84 @@ public class MenuTest {
     @Autowired
     private MenuRepository menuRepository;
 
-    @Test
-    public void authentication() {
-//        List<Menu> menuList = menuRepository.findAll();
+//    @Test
+    public void authorization() {
+//        List<SysMenu> sysMenuList = menuRepository.findAll();
 //
-//        Optional<Group> group = groupRepository.findById(1L);
-//        group.ifPresent(group1 -> {
-//            group1.setMenu(menuList);
+//        Optional<SysGroup> sysGroup = groupRepository.findById(1L);
+//        sysGroup.ifPresent(group1 -> {
+//            group1.setSysMenus(sysMenuList);
 //            groupRepository.save(group1);
 //        });
 
-        Optional<Menu> menu = menuRepository.findById(3L);
-        List<Menu> menuList = new ArrayList<>();
-        menu.ifPresent(menuList::add);
-        Optional<Group> group = groupRepository.findById(2L);
+        Optional<SysMenu> menu = menuRepository.findById(3L);
+        List<SysMenu> sysMenuList = new ArrayList<>();
+        menu.ifPresent(sysMenuList::add);
+        Optional<SysGroup> group = groupRepository.findById(-1L);
         group.ifPresent(group1 -> {
-            group1.setMenu(menuList);
+            group1.setSysMenus(sysMenuList);
             groupRepository.save(group1);
         });
 
 
     }
 
-    @Test
+//    @Test
     public void list() {
         long groupId = 1L;
-        List<Menu> menuList = menuRepository.findAll(MenuSpec.findAllByGroupId(groupId));
+        List<SysMenu> sysMenuList = menuRepository.findAll(MenuSpec.findAllByGroupId(groupId));
 
-        menuList.forEach(System.out::println);
+        sysMenuList.forEach(System.out::println);
     }
 
-    @Test
+//    @Test
     public void addMenu() {
-        List<Menu> menuList = new ArrayList<>();
-        Menu menu = new Menu();
+        List<SysMenu> sysMenuList = new ArrayList<>();
+        SysMenu sysMenu = new SysMenu();
 
-//        menu.setCode("introduction/index");
-//        menu.setTitle("introduction");
-//        menu.setIcon("introduction");
-//        menu.setParentId(-1);
-//        menu.setCreateTime(new Date());
-//        menu.setCreateBy("DBA");
-//        menuList.add(menu);
+        sysMenu.setCode("introduction/index");
+        sysMenu.setTitle("introduction");
+        sysMenu.setIcon("introduction");
+        sysMenu.setParentId(-1);
+        sysMenu.setCreateTime(new Date());
+        sysMenu.setCreateBy("DBA");
+        sysMenuList.add(sysMenu);
+
+        sysMenu.setCode("introduction/index");
+        sysMenu.setTitle("introduction");
+        sysMenu.setIcon("introduction");
+        sysMenu.setParentId(-1);
+        sysMenu.setCreateTime(new Date());
+        sysMenu.setCreateBy("DBA");
+        sysMenuList.add(sysMenu);
 //
-//        menu = new Menu();
-//        menu.setCode("demoes/checkbox");
-//        menu.setTitle("checkbox");
-//        menu.setIcon("validation");
-//        menu.setParentId(-1);
-//        menu.setCreateTime(new Date());
-//        menu.setCreateBy("DBA");
-//        menuList.add(menu);
+//        sysMenu = new SysMenu();
+//        sysMenu.setCode("demoes/checkbox");
+//        sysMenu.setTitle("checkbox");
+//        sysMenu.setIcon("validation");
+//        sysMenu.setParentId(-1);
+//        sysMenu.setCreateTime(new Date());
+//        sysMenu.setCreateBy("DBA");
+//        sysMenuList.add(sysMenu);
 
-        menu.setCode("demoes/formValidation");
-        menu.setTitle("formValidation");
-        menu.setIcon("validation");
-        menu.setParentId(-1);
-        menu.setCreateTime(new Date());
-        menu.setCreateBy("DBA");
-        menuList.add(menu);
+//        sysMenu.setCode("demoes/formValidation");
+//        sysMenu.setTitle("formValidation");
+//        sysMenu.setIcon("validation");
+//        sysMenu.setParentId(-1);
+//        sysMenu.setCreateTime(new Date());
+//        sysMenu.setCreateBy("DBA");
+//        sysMenuList.add(sysMenu);
+//
+//        sysMenu = new SysMenu();
+//        sysMenu.setCode("demoes/line");
+//        sysMenu.setTitle("line");
+//        sysMenu.setIcon("chart");
+//        sysMenu.setParentId(-1);
+//        sysMenu.setCreateTime(new Date());
+//        sysMenu.setCreateBy("DBA");
+//        sysMenuList.add(sysMenu);
 
-        menu = new Menu();
-        menu.setCode("demoes/line");
-        menu.setTitle("line");
-        menu.setIcon("chart");
-        menu.setParentId(-1);
-        menu.setCreateTime(new Date());
-        menu.setCreateBy("DBA");
-        menuList.add(menu);
-
-        menuList.forEach(item -> menuRepository.save(item));
+        sysMenuList.forEach(item -> menuRepository.save(item));
     }
 
 }

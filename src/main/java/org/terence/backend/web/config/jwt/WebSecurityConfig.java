@@ -21,6 +21,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.terence.backend.common.constant.CommonConstant;
+import org.terence.backend.dao.entity.admin.SysUser;
 import org.terence.backend.dao.repository.admin.UserRepository;
 import org.terence.backend.web.filter.JwtAuthenticationFilter;
 
@@ -99,7 +100,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean("userDetailService")
     public UserDetailsService userDetailsService() {
         return (username) -> {
-            Optional<org.terence.backend.dao.entity.admin.User> baseUser = userRepository.findByUsername(username);
+            Optional<SysUser> baseUser = userRepository.findByUsername(username);
             User user;
             if (baseUser.isPresent()) {
                 user = new User(baseUser.get().getUsername(), baseUser.get().getPassword(), true, true, true, true, new ArrayList<>());

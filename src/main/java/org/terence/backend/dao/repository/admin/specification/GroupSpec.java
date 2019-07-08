@@ -1,8 +1,8 @@
 package org.terence.backend.dao.repository.admin.specification;
 
 import org.springframework.data.jpa.domain.Specification;
-import org.terence.backend.dao.entity.admin.Group;
-import org.terence.backend.dao.entity.admin.User;
+import org.terence.backend.dao.entity.admin.SysGroup;
+import org.terence.backend.dao.entity.admin.SysUser;
 
 import javax.persistence.criteria.*;
 
@@ -12,16 +12,16 @@ import javax.persistence.criteria.*;
  */
 public class GroupSpec {
 
-    public static Specification<Group> findOneByUserId(long userId) {
-        return (Root<Group> root, CriteriaQuery<?> query, CriteriaBuilder builder) -> {
-            Join<Group, User> join = root.join("user", JoinType.LEFT);
+    public static Specification<SysGroup> findOneByUserId(long userId) {
+        return (Root<SysGroup> root, CriteriaQuery<?> query, CriteriaBuilder builder) -> {
+            Join<SysGroup, SysUser> join = root.join("sysUser", JoinType.LEFT);
             return builder.equal(join.get("id"), userId);
         };
     }
 
-    public static Specification<Group> findOneByUsername(String username) {
-        return (Root<Group> root, CriteriaQuery<?> query, CriteriaBuilder builder) -> {
-            Join<Group, User> join = root.join("user", JoinType.LEFT);
+    public static Specification<SysGroup> findOneByUsername(String username) {
+        return (Root<SysGroup> root, CriteriaQuery<?> query, CriteriaBuilder builder) -> {
+            Join<SysGroup, SysUser> join = root.join("sysUser", JoinType.LEFT);
             return builder.equal(join.get("username"), username);
         };
     }

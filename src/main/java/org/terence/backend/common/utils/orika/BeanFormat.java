@@ -3,14 +3,12 @@ package org.terence.backend.common.utils.orika;
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 import ma.glasnost.orika.metadata.ClassMapBuilder;
-import org.terence.backend.dao.entity.admin.Group;
-import org.terence.backend.dao.entity.admin.Menu;
-import org.terence.backend.dao.entity.admin.User;
+import org.terence.backend.dao.entity.admin.SysGroup;
+import org.terence.backend.dao.entity.admin.SysMenu;
+import org.terence.backend.dao.entity.admin.SysUser;
 import org.terence.backend.service.vo.admin.GroupVo;
 import org.terence.backend.service.vo.admin.MenuVo;
 import org.terence.backend.service.vo.admin.UserVo;
-
-import java.util.Optional;
 
 /**
  * @author terence
@@ -20,14 +18,14 @@ public class BeanFormat {
 
     public static MapperFactory formatUser() {
         MapperFactory factory = new DefaultMapperFactory.Builder().mapNulls(false).build();
-        ClassMapBuilder<User, User> builder = factory.classMap(User.class, User.class);
+        ClassMapBuilder<SysUser, SysUser> builder = factory.classMap(SysUser.class, SysUser.class);
         builder.byDefault().register();
         return factory;
     }
 
-    public static UserVo formatUserWithoutPwd(User user) {
+    public static UserVo formatUserWithoutPwd(SysUser sysUser) {
         MapperFactory factory = new DefaultMapperFactory.Builder().build();
-        ClassMapBuilder<User, UserVo> builder = factory.classMap(User.class, UserVo.class);
+        ClassMapBuilder<SysUser, UserVo> builder = factory.classMap(SysUser.class, UserVo.class);
         builder
                 .field("id", "userId")
                 .field("username", "username")
@@ -36,26 +34,26 @@ public class BeanFormat {
                 .field("gender", "gender")
                 .field("mobile", "mobile")
                 .field("description", "description")
-                .field("group.id", "groupId")
-                .field("group.name", "groupName");
+                .field("sysGroup.id", "groupId")
+                .field("sysGroup.name", "groupName");
         builder.register();
-        return factory.getMapperFacade().map(user, UserVo.class);
+        return factory.getMapperFacade().map(sysUser, UserVo.class);
     }
 
     public static MapperFactory formatUserAndUserVo() {
         MapperFactory factory = new DefaultMapperFactory.Builder().build();
-        ClassMapBuilder<UserVo, User> builder = factory.classMap(UserVo.class, User.class);
+        ClassMapBuilder<UserVo, SysUser> builder = factory.classMap(UserVo.class, SysUser.class);
         builder
                 .field("userId", "id")
-                .field("groupId", "group.id")
-                .field("groupName", "group.name");
+                .field("groupId", "sysGroup.id")
+                .field("groupName", "sysGroup.name");
         builder.byDefault().register();
         return factory;
     }
 
     public static MapperFactory formatGroupVo() {
         MapperFactory factory = new DefaultMapperFactory.Builder().mapNulls(false).build();
-        ClassMapBuilder<Group, GroupVo> builder = factory.classMap(Group.class, GroupVo.class);
+        ClassMapBuilder<SysGroup, GroupVo> builder = factory.classMap(SysGroup.class, GroupVo.class);
         builder.field("id", "groupId");
         builder.byDefault().register();
         return factory;
@@ -63,7 +61,7 @@ public class BeanFormat {
 
     public static MapperFactory formatMenuVo() {
         MapperFactory factory = new DefaultMapperFactory.Builder().mapNulls(false).build();
-        ClassMapBuilder<Menu, MenuVo> builder = factory.classMap(Menu.class, MenuVo.class);
+        ClassMapBuilder<SysMenu, MenuVo> builder = factory.classMap(SysMenu.class, MenuVo.class);
         builder.byDefault().register();
         return factory;
     }

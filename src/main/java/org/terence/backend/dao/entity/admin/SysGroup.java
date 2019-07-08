@@ -13,9 +13,9 @@ import java.util.List;
  * @since 2019/2/20 10:15
  */
 @Data
-@ToString(exclude = {"user", "menu"})
-@Entity(name = "base_group")
-public class Group implements Serializable {
+@ToString(exclude = {"sysUser", "sysMenus"})
+@Entity(name = "sys_group")
+public class SysGroup implements Serializable {
 
     private static final long serialVersionUID = -3751135703095273361L;
 
@@ -37,11 +37,11 @@ public class Group implements Serializable {
     @Column(nullable = false)
     private String createBy;
 
-    @OneToMany(mappedBy = "group", fetch = FetchType.EAGER)
-    private List<User> user;
+    @OneToMany(mappedBy = "sysGroup", fetch = FetchType.EAGER)
+    private List<SysUser> sysUser;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "base_group_menu", joinColumns = { @JoinColumn(name = "group_id") },
-    inverseJoinColumns = { @JoinColumn(name = "menu_id") })
-    private List<Menu> menu;
+    @JoinTable(name = "sys_group_menu", joinColumns = { @JoinColumn(name = "sys_group_id") },
+    inverseJoinColumns = { @JoinColumn(name = "sys_menu_id") })
+    private List<SysMenu> sysMenus;
 }

@@ -12,9 +12,9 @@ import java.sql.Date;
  * @since 2019/2/18 17:27
  */
 @Data
-@ToString(exclude = "group")
-@Entity(name = "base_user")
-public class User implements Serializable {
+@ToString(exclude = "sysGroup")
+@Entity(name = "sys_user")
+public class SysUser implements Serializable {
 
     private static final long serialVersionUID = -2308494806205517973L;
 
@@ -47,14 +47,14 @@ public class User implements Serializable {
     private String createBy;
 
     @ManyToOne
-    @JoinColumn(name = "group_id")
-    private Group group;
+    @JoinColumn(name = "sys_group_id")
+    private SysGroup sysGroup;
 
-    public User() {
+    public SysUser() {
     }
 
     // TODO: to be delete
-    public User(String username, String password, String name, String email, Date createTime, String createBy) {
+    public SysUser(String username, String password, String name, String email, Date createTime, String createBy) {
         this.username = username;
         this.password = password;
         this.name = name;
@@ -64,30 +64,30 @@ public class User implements Serializable {
     }
 
     // constructor for refresh token
-    public User(long id, String username, String name) {
+    public SysUser(long id, String username, String name) {
         this.id = id;
         this.username = username;
         this.name = name;
     }
 
 //    // constructor for register / add
-//    public User(String username, String password, String name, String email, String gender, String mobile, Group group) {
+//    public SysUser(String username, String password, String name, String email, String gender, String mobile, SysGroup sysGroup) {
 //        this.username = username;
 //        this.password = password;
 //        this.name = name;
 //        this.email = email;
 //        this.gender = gender;
 //        this.mobile = mobile;
-//        this.group = group;
+//        this.sysGroup = sysGroup;
 //    }
 //
 //    // constructor for detail
-//    public User(String username, String name, String email, String gender, String mobile, Group group) {
+//    public SysUser(String username, String name, String email, String gender, String mobile, SysGroup sysGroup) {
 //        this.username = username;
 //        this.name = name;
 //        this.email = email;
 //        this.gender = gender;
 //        this.mobile = mobile;
-//        this.group.setId(group.getId());
+//        this.sysGroup.setId(sysGroup.getId());
 //    }
 }

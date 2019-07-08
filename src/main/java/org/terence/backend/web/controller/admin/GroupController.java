@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.terence.backend.common.utils.orika.BeanFormat;
-import org.terence.backend.dao.entity.admin.Group;
+import org.terence.backend.dao.entity.admin.SysGroup;
 import org.terence.backend.service.service.admin.GroupService;
 import org.terence.backend.service.vo.admin.GroupVo;
 import org.terence.backend.service.vo.base.ObjectResponse;
@@ -30,9 +30,9 @@ public class GroupController {
 
     @GetMapping("idAndName")
     public ObjectResponse<List<GroupVo>> getGroupIdAndName() {
-        List<Group> groupList = groupService.getGroupIdAndName();
+        List<SysGroup> sysGroupList = groupService.getGroupIdAndName();
         List<GroupVo> groupVoList = new ArrayList<>();
-        groupList.forEach(item -> groupVoList.add(BeanFormat.formatGroupVo().getMapperFacade().map(item, GroupVo.class)));
+        sysGroupList.forEach(item -> groupVoList.add(BeanFormat.formatGroupVo().getMapperFacade().map(item, GroupVo.class)));
         return new ObjectResponse<>(groupVoList);
     }
 }

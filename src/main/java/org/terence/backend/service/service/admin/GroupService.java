@@ -1,6 +1,6 @@
 package org.terence.backend.service.service.admin;
 
-import org.terence.backend.dao.entity.admin.Group;
+import org.terence.backend.dao.entity.admin.SysGroup;
 
 import java.util.List;
 
@@ -10,9 +10,9 @@ import java.util.List;
  */
 public interface GroupService {
 
-    Group getGroupById(long l);
+    SysGroup getGroupById(long l);
 
-    Group getGroupByUserId(long parseLong);
+    SysGroup getGroupByUserId(long parseLong);
 
-    List<Group> getGroupIdAndName();
+    List<SysGroup> getGroupIdAndName();
 }

@@ -40,6 +40,11 @@ public class AuthController {
         return new ObjectResponse<>(token);
     }
 
+    /**
+     * To make sure the username will not be duplicated
+     * @param username: login user name
+     * @return Boolean
+     */
     @GetMapping("/verifyUsername")
     public ObjectResponse<Boolean> verifyUsername(@RequestParam("username") String username) {
         boolean result = authService.verifyUsername(username);
@@ -47,21 +52,15 @@ public class AuthController {
     }
 
     /**
-     * using npm package 'jwt-decode' in Vue to verify token
+     * Using npm package 'jwt-decode' in Vue to verify token
      * invoke this api to refresh access_token by refresh_token if access_token expired
-     * @param request
-     * @return
+     * @param request: HttpServletRequest
+     * @return String
      */
     @PostMapping("/refresh")
     public ObjectResponse<String> refresh(HttpServletRequest request) {
         String refreshToken = request.getHeader(userAuthConfig.getRefreshHeader());
         String accessToken = authService.refresh(refreshToken);
         return new ObjectResponse<>(accessToken);
-    }
-
-    @GetMapping("/test")
-    public ObjectResponse<String> test() {
-        System.out.println("has token");
-        return new ObjectResponse<>("test");
     }
 }

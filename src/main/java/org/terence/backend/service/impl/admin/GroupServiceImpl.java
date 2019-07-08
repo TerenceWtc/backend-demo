@@ -1,8 +1,8 @@
-package org.terence.backend.service.service.admin.impl;
+package org.terence.backend.service.impl.admin;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.terence.backend.dao.entity.admin.Group;
+import org.terence.backend.dao.entity.admin.SysGroup;
 import org.terence.backend.dao.repository.admin.GroupRepository;
 import org.terence.backend.dao.repository.admin.specification.GroupSpec;
 import org.terence.backend.service.service.admin.GroupService;
@@ -25,20 +25,20 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Group getGroupById(long id) {
-        Optional<Group> group = groupRepository.findById(id);
+    public SysGroup getGroupById(long id) {
+        Optional<SysGroup> group = groupRepository.findById(id);
         return group.orElse(null);
     }
 
     @Override
-    public Group getGroupByUserId(long userId) {
-        Optional<Group> group = groupRepository.findOne(GroupSpec.findOneByUserId(userId));
+    public SysGroup getGroupByUserId(long userId) {
+        Optional<SysGroup> group = groupRepository.findOne(GroupSpec.findOneByUserId(userId));
         return group.orElse(null);
     }
 
     @Override
-    public List<Group> getGroupIdAndName() {
-        List<Group> groupList = groupRepository.findAll();
-        return groupList;
+    public List<SysGroup> getGroupIdAndName() {
+        List<SysGroup> sysGroupList = groupRepository.findAll();
+        return sysGroupList;
     }
 }

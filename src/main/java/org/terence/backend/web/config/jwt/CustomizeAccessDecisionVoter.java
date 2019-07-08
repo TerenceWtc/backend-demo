@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component;
 import org.terence.backend.common.exception.jwt.GroupNotAssignedException;
 import org.terence.backend.common.utils.NullValueUtil;
 import org.terence.backend.common.utils.jwt.IUserJwtInfo;
-import org.terence.backend.dao.entity.admin.Group;
-import org.terence.backend.dao.entity.admin.Menu;
+import org.terence.backend.dao.entity.admin.SysGroup;
+import org.terence.backend.dao.entity.admin.SysMenu;
 import org.terence.backend.dao.repository.admin.GroupRepository;
 import org.terence.backend.dao.repository.admin.MenuRepository;
 import org.terence.backend.dao.repository.admin.specification.GroupSpec;
@@ -68,21 +68,21 @@ public class CustomizeAccessDecisionVoter implements AccessDecisionVoter {
         final String requestURI = request.getRequestURI();
 
         // 查询这个人的角色
-        Optional<Group> groupOptional = groupRepository.findOne(GroupSpec.findOneByUserId(userId));
-        Group group;
+        Optional<SysGroup> groupOptional = groupRepository.findOne(GroupSpec.findOneByUserId(userId));
+        SysGroup sysGroup;
         if (groupOptional.isPresent()) {
-            group = groupOptional.get();
+            sysGroup = groupOptional.get();
         } else {
             // 没有分配权限
-            throw new GroupNotAssignedException("Group not assigned!");
+            throw new GroupNotAssignedException("SysGroup not assigned!");
         }
 
         // 查询这个角色的权限
-        List<Menu> menuList = menuRepository.findAll(MenuSpec.findAllByGroupId(group.getId()));
+        List<SysMenu> sysMenuList = menuRepository.findAll(MenuSpec.findAllByGroupId(sysGroup.getId()));
 
         // 判断请求的资源在不在权限里
 
-        if (menuList.size() != 0) {
+        if (sysMenuList.size() != 0) {
             result = ACCESS_GRANTED;
         }
 

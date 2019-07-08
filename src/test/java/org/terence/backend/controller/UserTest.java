@@ -1,18 +1,12 @@
 package org.terence.backend.controller;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.terence.backend.dao.entity.admin.Group;
-import org.terence.backend.dao.entity.admin.User;
+import org.terence.backend.dao.entity.admin.SysGroup;
+import org.terence.backend.dao.entity.admin.SysUser;
 import org.terence.backend.dao.repository.admin.GroupRepository;
 import org.terence.backend.dao.repository.admin.UserRepository;
 import org.terence.backend.dao.repository.admin.specification.GroupSpec;
 
-import javax.persistence.criteria.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,8 +14,8 @@ import java.util.Optional;
  * @Author: terence
  * @Date: 2019/2/21 16:09
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest
+//@RunWith(SpringRunner.class)
+//@SpringBootTest
 public class UserTest {
 
     @Autowired
@@ -30,7 +24,7 @@ public class UserTest {
     @Autowired
     private UserRepository userRepository;
 
-    @Test
+//    @Test
     public void test() {
         /**
          * equals to following SQL:
@@ -42,9 +36,9 @@ public class UserTest {
          */
 //        List<GroupUser> list = groupUserRepository.findAll((Root<GroupUser> root, CriteriaQuery<?> query, CriteriaBuilder builder) -> {
 //            List<Predicate> predicateList = new ArrayList<>();
-//            Join<GroupUser, Group> joinGroup = root.join("group", JoinType.LEFT);
-//            predicateList.add(builder.equal(root.get("group").get("id"), joinGroup.get("id")));
-//            predicateList.add(builder.le(root.get("user").get("id"), 3L));
+//            Join<GroupUser, SysGroup> joinGroup = root.join("sysGroup", JoinType.LEFT);
+//            predicateList.add(builder.equal(root.get("sysGroup").get("id"), joinGroup.get("id")));
+//            predicateList.add(builder.le(root.get("sysUser").get("id"), 3L));
 //            Predicate[] predicates = new Predicate[predicateList.size()];
 //            query.where(predicateList.toArray(predicates));
 //            return builder.and(predicateList.toArray(predicates));
@@ -52,20 +46,29 @@ public class UserTest {
 //        list.forEach(System.out::println);
     }
 
-    @Test
+//    @Test
     public void test2() {
-        long userId = 1L;
+        long userId = 8L;
         String username = "admin";
-        List<Group> group = groupRepository.findAll(GroupSpec.findOneByUsername(username));
-//        if (group.isPresent()) {
-//            System.out.println(group.get())
+        List<SysGroup> sysGroup = groupRepository.findAll(GroupSpec.findOneByUsername(username));
+//        if (sysGroup.isPresent()) {
+//            System.out.println(sysGroup.get())
 //        }
 
-        group.forEach(item -> System.out.println(item.getId()));
-        group.forEach(System.out::println);
+        sysGroup.forEach(item -> System.out.println(item.getId()));
+        sysGroup.forEach(System.out::println);
     }
 
-    @Test
-    public void test3() {
+//    @Test
+    public void authorization() {
+        long userId = 8L;
+        long groupId = 1L;
+        Optional<SysUser> userOptional = userRepository.findById(userId);
+        Optional<SysGroup> groupOptional = groupRepository.findById(groupId);
+        if (userOptional.isPresent() && groupOptional.isPresent()) {
+            SysUser sysUser = userOptional.get();
+            sysUser.setSysGroup(groupOptional.get());
+            userRepository.save(sysUser);
+        }
     }
 }

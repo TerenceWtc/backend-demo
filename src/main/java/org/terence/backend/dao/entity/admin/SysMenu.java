@@ -14,9 +14,9 @@ import java.util.List;
  * @since 2019/2/22 17:06
  */
 @Data
-@ToString(exclude = "group")
-@Entity(name = "base_menu")
-public class Menu implements Serializable {
+@ToString(exclude = "sysGroup")
+@Entity(name = "sys_menu")
+public class SysMenu implements Serializable {
 
     private static final long serialVersionUID = -3917945599306780941L;
 
@@ -46,6 +46,6 @@ public class Menu implements Serializable {
     @Column(nullable = false)
     private String createBy;
 
-    @ManyToMany(mappedBy = "menu")
-    private List<Group> group;
+    @ManyToMany(mappedBy = "sysMenus")
+    private List<SysGroup> sysGroup;
 }

@@ -1,4 +1,4 @@
-package org.terence.backend.service.service.auth.impl;
+package org.terence.backend.service.impl.auth;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +14,10 @@ import org.terence.backend.common.exception.jwt.TokenExpiredException;
 import org.terence.backend.common.utils.jwt.IUserJwtInfo;
 import org.terence.backend.common.utils.jwt.JwtHelper;
 import org.terence.backend.common.utils.jwt.UserJwtInfo;
-import org.terence.backend.dao.entity.admin.User;
+import org.terence.backend.dao.entity.admin.SysUser;
 import org.terence.backend.service.service.admin.UserService;
 import org.terence.backend.service.service.auth.AuthService;
 import org.terence.backend.service.vo.auth.Token;
-import org.terence.backend.service.vo.base.ObjectResponse;
 import org.terence.backend.web.config.jwt.UserAuthConfig;
 
 import java.sql.Date;
@@ -55,16 +54,16 @@ public class AuthServiceImpl implements AuthService {
             // authorization failed, usually invalid password
             throw new UserInvalidException("Bad credentials!", ExceptionConstant.BAD_CREDENTIALS_CODE);
         }
-        User user = userService.getUserByUsername(username);
-        String accessToken = generateToken(user, userAuthConfig.getAccessExpiration());
-        String refreshToken = generateToken(user, userAuthConfig.getRefreshExpiration());
+        SysUser sysUser = userService.getUserByUsername(username);
+        String accessToken = generateToken(sysUser, userAuthConfig.getAccessExpiration());
+        String refreshToken = generateToken(sysUser, userAuthConfig.getRefreshExpiration());
         return new Token(accessToken, refreshToken);
     }
 
     @Override
     public Token register(String username, String password, String name, String email) {
-        User user = new User(username, password, name, email, Date.valueOf(LocalDate.now()), "REGISTER");
-        User result = userService.registerUser(user);
+        SysUser sysUser = new SysUser(username, password, name, email, Date.valueOf(LocalDate.now()), "REGISTER");
+        SysUser result = userService.registerUser(sysUser);
         String accessToken = generateToken(result, userAuthConfig.getAccessExpiration());
         String refreshToken = generateToken(result, userAuthConfig.getRefreshExpiration());
         return new Token(accessToken, refreshToken);
@@ -80,8 +79,8 @@ public class AuthServiceImpl implements AuthService {
         } catch (Exception e) {
             throw new TokenException("invalid token");
         }
-        User user = new User(Long.parseLong(userJwtInfo.getId()), userJwtInfo.getName(), userJwtInfo.getUsername());
-        return generateToken(user, userAuthConfig.getAccessExpiration());
+        SysUser sysUser = new SysUser(Long.parseLong(userJwtInfo.getId()), userJwtInfo.getName(), userJwtInfo.getUsername());
+        return generateToken(sysUser, userAuthConfig.getAccessExpiration());
     }
 
     @Override
@@ -89,10 +88,10 @@ public class AuthServiceImpl implements AuthService {
         return userService.verifyUsername(username);
     }
 
-    private String generateToken(User user, int expiration) {
+    private String generateToken(SysUser sysUser, int expiration) {
         String token = null;
         try {
-            UserJwtInfo userJwtInfo = new UserJwtInfo(user.getId() + "", user.getUsername(), user.getName());
+            UserJwtInfo userJwtInfo = new UserJwtInfo(sysUser.getId() + "", sysUser.getUsername(), sysUser.getName());
             token = JwtHelper.generateToken(userJwtInfo, userAuthConfig.getPrivateKeyPath(), expiration);
         } catch (Exception e) {
             e.printStackTrace();

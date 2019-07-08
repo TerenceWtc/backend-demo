@@ -1,4 +1,4 @@
-package org.terence.backend.service.service.admin.impl;
+package org.terence.backend.service.impl.admin;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -6,8 +6,8 @@ import org.terence.backend.common.exception.jwt.TokenException;
 import org.terence.backend.common.utils.jwt.IUserJwtInfo;
 import org.terence.backend.common.utils.jwt.JwtHelper;
 import org.terence.backend.common.utils.orika.BeanFormat;
-import org.terence.backend.dao.entity.admin.Group;
-import org.terence.backend.dao.entity.admin.Menu;
+import org.terence.backend.dao.entity.admin.SysGroup;
+import org.terence.backend.dao.entity.admin.SysMenu;
 import org.terence.backend.dao.entity.base.TreeNode;
 import org.terence.backend.dao.repository.admin.MenuRepository;
 import org.terence.backend.dao.repository.admin.specification.MenuSpec;
@@ -47,10 +47,10 @@ public class MenuServiceImpl implements MenuService {
         } catch (Exception e) {
             throw new TokenException("invalid token");
         }
-        Group group = groupService.getGroupByUserId(Long.parseLong(userJwtInfo.getId()));
-        List<Menu> menuList = menuRepository.findAll(MenuSpec.findAllByGroupId(group.getId()));
+        SysGroup sysGroup = groupService.getGroupByUserId(Long.parseLong(userJwtInfo.getId()));
+        List<SysMenu> sysMenuList = menuRepository.findAll(MenuSpec.findAllByGroupId(sysGroup.getId()));
         List<MenuVo> menuVoList = new ArrayList<>();
-        menuList.forEach(item -> {
+        sysMenuList.forEach(item -> {
                     MenuVo menuVo = BeanFormat.formatMenuVo().getMapperFacade().map(item, MenuVo.class);
                     menuVoList.add(menuVo);
                 });

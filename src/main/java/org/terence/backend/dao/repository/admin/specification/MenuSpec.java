@@ -1,8 +1,8 @@
 package org.terence.backend.dao.repository.admin.specification;
 
 import org.springframework.data.jpa.domain.Specification;
-import org.terence.backend.dao.entity.admin.Group;
-import org.terence.backend.dao.entity.admin.Menu;
+import org.terence.backend.dao.entity.admin.SysGroup;
+import org.terence.backend.dao.entity.admin.SysMenu;
 
 import javax.persistence.criteria.*;
 
@@ -12,9 +12,9 @@ import javax.persistence.criteria.*;
  */
 public class MenuSpec {
 
-    public static Specification<Menu> findAllByGroupId(long groupId) {
-        return (Root<Menu> root, CriteriaQuery<?> query, CriteriaBuilder builder) -> {
-            Join<Menu, Group> join = root.join("group", JoinType.LEFT);
+    public static Specification<SysMenu> findAllByGroupId(long groupId) {
+        return (Root<SysMenu> root, CriteriaQuery<?> query, CriteriaBuilder builder) -> {
+            Join<SysMenu, SysGroup> join = root.join("sysGroup", JoinType.LEFT);
             return builder.equal(join.get("id"), groupId);
         };
     }

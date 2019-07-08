@@ -58,11 +58,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         if (userIwtInfo != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            logger.debug("security context was null, so authorizing user");
+            logger.debug("security context was null, so authorizing sysUser");
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     userIwtInfo, null, new ArrayList<>());
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
-            logger.info("authorized user '{}', setting security context", userIwtInfo.getUsername());
+            logger.info("authorized sysUser '{}', setting security context", userIwtInfo.getUsername());
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         filterChain.doFilter(httpServletRequest, httpServletResponse);
