@@ -13,11 +13,12 @@ import org.terence.backend.common.utils.jwt.JwtHelper;
 import org.terence.backend.common.utils.orika.BeanFormat;
 import org.terence.backend.dao.entity.admin.SysGroup;
 import org.terence.backend.dao.entity.admin.SysUser;
-import org.terence.backend.dao.repository.admin.UserRepository;
-import org.terence.backend.dao.repository.admin.specification.UserSpec;
-import org.terence.backend.service.service.admin.GroupService;
-import org.terence.backend.service.service.admin.UserService;
+import org.terence.backend.dao.repository.admin.SysUserRepository;
+import org.terence.backend.dao.specification.admin.SysUserSpec;
+import org.terence.backend.service.service.admin.SysGroupService;
+import org.terence.backend.service.service.admin.SysUserService;
 import org.terence.backend.service.vo.admin.UserVo;
+import org.terence.backend.service.vo.base.PageVo;
 import org.terence.backend.service.vo.base.ParamsVo;
 import org.terence.backend.service.vo.base.TableData;
 import org.terence.backend.web.config.jwt.UserAuthConfig;
@@ -33,34 +34,34 @@ import java.util.Optional;
  * @since 2019/2/25 15:22
  */
 @Service
-public class UserServiceImpl implements UserService {
+public class SysUserServiceImpl implements SysUserService {
 
-    private final UserRepository userRepository;
+    private final SysUserRepository sysUserRepository;
 
     private final UserAuthConfig userAuthConfig;
 
-    private final GroupService groupService;
+    private final SysGroupService sysGroupService;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserAuthConfig userAuthConfig, GroupService groupService) {
-        this.userRepository = userRepository;
+    public SysUserServiceImpl(SysUserRepository sysUserRepository, UserAuthConfig userAuthConfig, SysGroupService sysGroupService) {
+        this.sysUserRepository = sysUserRepository;
         this.userAuthConfig = userAuthConfig;
-        this.groupService = groupService;
+        this.sysGroupService = sysGroupService;
     }
 
     @Override
 //    @Cacheable(value = "sysUser", key = "#p0")
     public SysUser getUserByUsername(String username) {
-        Optional<SysUser> user = userRepository.findByUsername(username);
+        Optional<SysUser> user = sysUserRepository.findByUsername(username);
         return user.orElse(null);
     }
 
     @Override
     public SysUser registerUser(SysUser sysUser) {
-        SysGroup sysGroup = groupService.getGroupById(-1L);
+        SysGroup sysGroup = sysGroupService.getGroupById(-1L);
         sysUser.setSysGroup(sysGroup);
         sysUser.setPassword(new BCryptPasswordEncoder(CommonConstant.PASSWORD_ENCORDER_SALT).encode(sysUser.getPassword()));
-        return userRepository.save(sysUser);
+        return sysUserRepository.save(sysUser);
     }
 
     @Override
@@ -71,7 +72,7 @@ public class UserServiceImpl implements UserService {
         } catch (Exception e) {
             throw new TokenException("invalid token");
         }
-        Optional<SysUser> result = userRepository.findById(Long.valueOf(userJwtInfo.getId()));
+        Optional<SysUser> result = sysUserRepository.findById(Long.valueOf(userJwtInfo.getId()));
         SysUser sysUser;
         if (result.isPresent()) {
             sysUser = result.get();
@@ -84,14 +85,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean verifyUsername(String username) {
-        Optional<SysUser> userOptional = userRepository.findByUsername(username);
+        Optional<SysUser> userOptional = sysUserRepository.findByUsername(username);
         return userOptional.isPresent();
     }
 
     @Override
-    public TableData<UserVo> getList(int page, int size, List<ParamsVo> paramsVoList) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        Page<SysUser> userPage = userRepository.findAll(UserSpec.searchAll(paramsVoList), pageRequest);
+    public TableData<UserVo> getList(PageVo pageVo) {
+        PageRequest pageRequest = PageRequest.of(pageVo.getPage() - 1, pageVo.getSize());
+        Page<SysUser> userPage = sysUserRepository.findAll(SysUserSpec.searchAll(pageVo.getParamsVoList()), pageRequest);
         List<UserVo> userVos = new ArrayList<>();
         userPage.getContent().forEach(user -> userVos.add(new UserVo(user.getId() + "", user.getUsername(), user.getName(), user.getSysGroup().getId() + "", user.getSysGroup().getName())));
 
@@ -103,16 +104,16 @@ public class UserServiceImpl implements UserService {
         SysUser sysUser = BeanFormat.formatUserAndUserVo().getMapperFacade().map(userVo, SysUser.class);
         sysUser.setCreateTime(Date.valueOf(LocalDate.now()));
         sysUser.setCreateBy("admin");
-        SysGroup sysGroup = groupService.getGroupById(-1L);
+        SysGroup sysGroup = sysGroupService.getGroupById(-1L);
         sysUser.setSysGroup(sysGroup);
         sysUser.setPassword(new BCryptPasswordEncoder(CommonConstant.PASSWORD_ENCORDER_SALT).encode(sysUser.getPassword()));
-        userRepository.save(sysUser);
+        sysUserRepository.save(sysUser);
     }
 
     @Override
 //    @CacheEvict(value = "sysUser", key = "#p0")
     public void deleteUserById(long id) {
-        userRepository.deleteById(id);
+        sysUserRepository.deleteById(id);
 //        System.out.println("delete sysUser: " + id);
     }
 
@@ -121,17 +122,17 @@ public class UserServiceImpl implements UserService {
     public void updateUser(UserVo userVo) {
         // TODO:增量更新
         SysUser sysUserNew = BeanFormat.formatUserAndUserVo().getMapperFacade().map(userVo, SysUser.class);
-        Optional<SysUser> userOld = userRepository.findById(sysUserNew.getId());
+        Optional<SysUser> userOld = sysUserRepository.findById(sysUserNew.getId());
         if (userOld.isPresent()) {
             SysUser sysUser = userOld.get();
             BeanFormat.formatUser().getMapperFacade().map(sysUserNew, sysUser);
-            userRepository.save(sysUser);
+            sysUserRepository.save(sysUser);
         }
     }
 
     @Override
     public SysUser getUserById(long id) {
-        Optional<SysUser> user = userRepository.findById(id);
+        Optional<SysUser> user = sysUserRepository.findById(id);
         return user.orElse(null);
     }
 }

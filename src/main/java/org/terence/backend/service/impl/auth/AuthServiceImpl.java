@@ -15,7 +15,7 @@ import org.terence.backend.common.utils.jwt.IUserJwtInfo;
 import org.terence.backend.common.utils.jwt.JwtHelper;
 import org.terence.backend.common.utils.jwt.UserJwtInfo;
 import org.terence.backend.dao.entity.admin.SysUser;
-import org.terence.backend.service.service.admin.UserService;
+import org.terence.backend.service.service.admin.SysUserService;
 import org.terence.backend.service.service.auth.AuthService;
 import org.terence.backend.service.vo.auth.Token;
 import org.terence.backend.web.config.jwt.UserAuthConfig;
@@ -34,13 +34,13 @@ public class AuthServiceImpl implements AuthService {
 
     private final AuthenticationManager authenticationManager;
 
-    private final UserService userService;
+    private final SysUserService sysUserService;
 
     @Autowired
-    public AuthServiceImpl(UserAuthConfig userAuthConfig, AuthenticationManager authenticationManager, UserService userService) {
+    public AuthServiceImpl(UserAuthConfig userAuthConfig, AuthenticationManager authenticationManager, SysUserService sysUserService) {
         this.userAuthConfig = userAuthConfig;
         this.authenticationManager = authenticationManager;
-        this.userService = userService;
+        this.sysUserService = sysUserService;
     }
 
     @Override
@@ -54,7 +54,7 @@ public class AuthServiceImpl implements AuthService {
             // authorization failed, usually invalid password
             throw new UserInvalidException("Bad credentials!", ExceptionConstant.BAD_CREDENTIALS_CODE);
         }
-        SysUser sysUser = userService.getUserByUsername(username);
+        SysUser sysUser = sysUserService.getUserByUsername(username);
         String accessToken = generateToken(sysUser, userAuthConfig.getAccessExpiration());
         String refreshToken = generateToken(sysUser, userAuthConfig.getRefreshExpiration());
         return new Token(accessToken, refreshToken);
@@ -63,7 +63,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public Token register(String username, String password, String name, String email) {
         SysUser sysUser = new SysUser(username, password, name, email, Date.valueOf(LocalDate.now()), "REGISTER");
-        SysUser result = userService.registerUser(sysUser);
+        SysUser result = sysUserService.registerUser(sysUser);
         String accessToken = generateToken(result, userAuthConfig.getAccessExpiration());
         String refreshToken = generateToken(result, userAuthConfig.getRefreshExpiration());
         return new Token(accessToken, refreshToken);
@@ -85,7 +85,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public Boolean verifyUsername(String username) {
-        return userService.verifyUsername(username);
+        return sysUserService.verifyUsername(username);
     }
 
     private String generateToken(SysUser sysUser, int expiration) {

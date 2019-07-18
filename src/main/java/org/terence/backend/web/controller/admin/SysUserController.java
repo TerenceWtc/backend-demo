@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import org.terence.backend.common.utils.orika.BeanFormat;
 import org.terence.backend.common.utils.orika.JsonFormat;
 import org.terence.backend.dao.entity.admin.SysUser;
-import org.terence.backend.service.service.admin.UserService;
+import org.terence.backend.service.service.admin.SysUserService;
 import org.terence.backend.service.vo.admin.UserVo;
 import org.terence.backend.service.vo.base.*;
 
@@ -14,14 +14,14 @@ import org.terence.backend.service.vo.base.*;
  * @since 2019/3/1 16:32
  */
 @RestController
-@RequestMapping("admin/user")
-public class UserController {
+@RequestMapping("admin/sysUser")
+public class SysUserController {
 
-    private final UserService userService;
+    private final SysUserService sysUserService;
 
     @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public SysUserController(SysUserService sysUserService) {
+        this.sysUserService = sysUserService;
     }
 
     /**
@@ -31,38 +31,38 @@ public class UserController {
      */
     @GetMapping("getUserInfo")
     public ObjectResponse<UserVo> getUserInfo(@RequestParam("accessToken") String accessToken) {
-        UserVo userVo = userService.getUserInfo(accessToken);
+        UserVo userVo = sysUserService.getUserInfo(accessToken);
         return new ObjectResponse<>(userVo);
     }
 
     @GetMapping("list")
-    public TableResponse<UserVo> list(@RequestParam("page") String page) {
-        PageVo pageVo = JsonFormat.json2PageVo(page);
-        TableData<UserVo> userVoTableData = userService.getList(pageVo.getPage() - 1, pageVo.getSize(), pageVo.getParamsVoList());
+    public TableResponse<UserVo> list(String pageInfo) {
+        PageVo pageVo = JsonFormat.json2PageVo(pageInfo);
+        TableData<UserVo> userVoTableData = sysUserService.getList(pageVo);
         return new TableResponse<>(userVoTableData);
     }
 
     @PostMapping("")
     public BaseResponse addUser(@RequestBody UserVo userVo) {
-        userService.addUser(userVo);
+        sysUserService.addUser(userVo);
         return new BaseResponse();
     }
 
     @DeleteMapping("{id}")
     public BaseResponse deleteUser(@PathVariable long id) {
-        userService.deleteUserById(id);
+        sysUserService.deleteUserById(id);
         return new BaseResponse();
     }
 
     @PutMapping("")
     public BaseResponse updateUser(@RequestBody UserVo userVo) {
-        userService.updateUser(userVo);
+        sysUserService.updateUser(userVo);
         return new BaseResponse();
     }
 
     @GetMapping("{id}")
     public ObjectResponse<UserVo> getUser(@PathVariable long id) {
-        SysUser sysUser = userService.getUserById(id);
+        SysUser sysUser = sysUserService.getUserById(id);
         UserVo userVo = BeanFormat.formatUserWithoutPwd(sysUser);
         return new ObjectResponse<>(userVo);
     }

@@ -1,5 +1,6 @@
 package org.terence.backend.dao.entity.admin;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.ToString;
 
@@ -48,6 +49,7 @@ public class SysUser implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "sys_group_id")
+    @JsonBackReference
     private SysGroup sysGroup;
 
     public SysUser() {

@@ -1,4 +1,4 @@
-package org.terence.backend.dao.repository.admin.specification;
+package org.terence.backend.dao.specification.admin;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.terence.backend.dao.entity.admin.SysGroup;
@@ -10,7 +10,7 @@ import javax.persistence.criteria.*;
  * @author terence
  * @since 2019/2/25 9:39
  */
-public class MenuSpec {
+public class SysMenuSpec {
 
     public static Specification<SysMenu> findAllByGroupId(long groupId) {
         return (Root<SysMenu> root, CriteriaQuery<?> query, CriteriaBuilder builder) -> {

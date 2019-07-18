@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.terence.backend.common.utils.orika.BeanFormat;
 import org.terence.backend.dao.entity.admin.SysGroup;
-import org.terence.backend.service.service.admin.GroupService;
+import org.terence.backend.service.service.admin.SysGroupService;
 import org.terence.backend.service.vo.admin.GroupVo;
 import org.terence.backend.service.vo.base.ObjectResponse;
 
@@ -18,19 +18,19 @@ import java.util.List;
  * @since 2019/4/5 15:08
  */
 @RestController
-@RequestMapping("admin/group")
-public class GroupController {
+@RequestMapping("admin/sysGroup")
+public class SysGroupController {
 
-    private final GroupService groupService;
+    private final SysGroupService sysGroupService;
 
     @Autowired
-    public GroupController(GroupService groupService) {
-        this.groupService = groupService;
+    public SysGroupController(SysGroupService sysGroupService) {
+        this.sysGroupService = sysGroupService;
     }
 
     @GetMapping("idAndName")
     public ObjectResponse<List<GroupVo>> getGroupIdAndName() {
-        List<SysGroup> sysGroupList = groupService.getGroupIdAndName();
+        List<SysGroup> sysGroupList = sysGroupService.getGroupIdAndName();
         List<GroupVo> groupVoList = new ArrayList<>();
         sysGroupList.forEach(item -> groupVoList.add(BeanFormat.formatGroupVo().getMapperFacade().map(item, GroupVo.class)));
         return new ObjectResponse<>(groupVoList);

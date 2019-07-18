@@ -1,5 +1,6 @@
 package org.terence.backend.dao.entity.admin;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.ToString;
 import org.terence.backend.common.constant.CommonConstant;
@@ -47,5 +48,6 @@ public class SysMenu implements Serializable {
     private String createBy;
 
     @ManyToMany(mappedBy = "sysMenus")
+    @JsonBackReference
     private List<SysGroup> sysGroup;
 }

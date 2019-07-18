@@ -2,6 +2,7 @@ package org.terence.backend.service.service.admin;
 
 import org.terence.backend.dao.entity.admin.SysUser;
 import org.terence.backend.service.vo.admin.UserVo;
+import org.terence.backend.service.vo.base.PageVo;
 import org.terence.backend.service.vo.base.ParamsVo;
 import org.terence.backend.service.vo.base.TableData;
 
@@ -11,7 +12,7 @@ import java.util.List;
  * @author terence
  * @since 2019/2/25 15:21
  */
-public interface UserService {
+public interface SysUserService {
 
     SysUser getUserByUsername(String username);
 
@@ -21,7 +22,7 @@ public interface UserService {
 
     boolean verifyUsername(String username);
 
-    TableData<UserVo> getList(int page, int size, List<ParamsVo> paramsVoList);
+    TableData<UserVo> getList(PageVo pageVo);
 
     void addUser(UserVo userVo);
 

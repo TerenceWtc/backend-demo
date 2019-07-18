@@ -3,9 +3,9 @@ package org.terence.backend.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.terence.backend.dao.entity.admin.SysGroup;
 import org.terence.backend.dao.entity.admin.SysMenu;
-import org.terence.backend.dao.repository.admin.GroupRepository;
-import org.terence.backend.dao.repository.admin.MenuRepository;
-import org.terence.backend.dao.repository.admin.specification.MenuSpec;
+import org.terence.backend.dao.repository.admin.SysGroupRepository;
+import org.terence.backend.dao.repository.admin.SysMenuRepository;
+import org.terence.backend.dao.specification.admin.SysMenuSpec;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,31 +18,31 @@ import java.util.Optional;
  */
 //@RunWith(SpringRunner.class)
 //@SpringBootTest
-public class MenuTest {
+public class SysMenuTest {
 
     @Autowired
-    private GroupRepository groupRepository;
+    private SysGroupRepository sysGroupRepository;
 
     @Autowired
-    private MenuRepository menuRepository;
+    private SysMenuRepository sysMenuRepository;
 
 //    @Test
     public void authorization() {
-//        List<SysMenu> sysMenuList = menuRepository.findAll();
+//        List<SysMenu> sysMenuList = sysMenuRepository.findAll();
 //
-//        Optional<SysGroup> sysGroup = groupRepository.findById(1L);
+//        Optional<SysGroup> sysGroup = sysGroupRepository.findById(1L);
 //        sysGroup.ifPresent(group1 -> {
 //            group1.setSysMenus(sysMenuList);
-//            groupRepository.save(group1);
+//            sysGroupRepository.save(group1);
 //        });
 
-        Optional<SysMenu> menu = menuRepository.findById(3L);
+        Optional<SysMenu> menu = sysMenuRepository.findById(3L);
         List<SysMenu> sysMenuList = new ArrayList<>();
         menu.ifPresent(sysMenuList::add);
-        Optional<SysGroup> group = groupRepository.findById(-1L);
+        Optional<SysGroup> group = sysGroupRepository.findById(-1L);
         group.ifPresent(group1 -> {
             group1.setSysMenus(sysMenuList);
-            groupRepository.save(group1);
+            sysGroupRepository.save(group1);
         });
 
 
@@ -51,7 +51,7 @@ public class MenuTest {
 //    @Test
     public void list() {
         long groupId = 1L;
-        List<SysMenu> sysMenuList = menuRepository.findAll(MenuSpec.findAllByGroupId(groupId));
+        List<SysMenu> sysMenuList = sysMenuRepository.findAll(SysMenuSpec.findAllByGroupId(groupId));
 
         sysMenuList.forEach(System.out::println);
     }
@@ -103,7 +103,7 @@ public class MenuTest {
 //        sysMenu.setCreateBy("DBA");
 //        sysMenuList.add(sysMenu);
 
-        sysMenuList.forEach(item -> menuRepository.save(item));
+        sysMenuList.forEach(item -> sysMenuRepository.save(item));
     }
 
 }

@@ -10,7 +10,7 @@ import java.util.Optional;
  * @Author: terence
  * @Date: 2019/2/20 15:14
  */
-public interface UserRepository extends JpaRepository<SysUser, Long>, JpaSpecificationExecutor<SysUser> {
+public interface SysUserRepository extends JpaRepository<SysUser, Long>, JpaSpecificationExecutor<SysUser> {
 
     Optional<SysUser> findByUsername(String username);
 }

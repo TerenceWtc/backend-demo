@@ -8,7 +8,7 @@ import java.util.List;
  * @author terence
  * @since 2019/4/4 9:21
  */
-public interface GroupService {
+public interface SysGroupService {
 
     SysGroup getGroupById(long l);
 

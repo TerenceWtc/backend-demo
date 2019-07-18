@@ -13,10 +13,10 @@ import org.terence.backend.common.utils.NullValueUtil;
 import org.terence.backend.common.utils.jwt.IUserJwtInfo;
 import org.terence.backend.dao.entity.admin.SysGroup;
 import org.terence.backend.dao.entity.admin.SysMenu;
-import org.terence.backend.dao.repository.admin.GroupRepository;
-import org.terence.backend.dao.repository.admin.MenuRepository;
-import org.terence.backend.dao.repository.admin.specification.GroupSpec;
-import org.terence.backend.dao.repository.admin.specification.MenuSpec;
+import org.terence.backend.dao.repository.admin.SysGroupRepository;
+import org.terence.backend.dao.repository.admin.SysMenuRepository;
+import org.terence.backend.dao.specification.admin.SysGroupSpec;
+import org.terence.backend.dao.specification.admin.SysMenuSpec;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
@@ -31,14 +31,14 @@ import java.util.Optional;
 public class CustomizeAccessDecisionVoter implements AccessDecisionVoter {
     private final Logger logger = LoggerFactory.getLogger(CustomizeAccessDecisionVoter.class);
 
-    private final GroupRepository groupRepository;
+    private final SysGroupRepository sysGroupRepository;
 
-    private final MenuRepository menuRepository;
+    private final SysMenuRepository sysMenuRepository;
 
     @Autowired
-    public CustomizeAccessDecisionVoter(GroupRepository groupRepository, MenuRepository menuRepository) {
-        this.groupRepository = groupRepository;
-        this.menuRepository = menuRepository;
+    public CustomizeAccessDecisionVoter(SysGroupRepository sysGroupRepository, SysMenuRepository sysMenuRepository) {
+        this.sysGroupRepository = sysGroupRepository;
+        this.sysMenuRepository = sysMenuRepository;
     }
 
     @Override
@@ -68,7 +68,7 @@ public class CustomizeAccessDecisionVoter implements AccessDecisionVoter {
         final String requestURI = request.getRequestURI();
 
         // 查询这个人的角色
-        Optional<SysGroup> groupOptional = groupRepository.findOne(GroupSpec.findOneByUserId(userId));
+        Optional<SysGroup> groupOptional = sysGroupRepository.findOne(SysGroupSpec.findOneByUserId(userId));
         SysGroup sysGroup;
         if (groupOptional.isPresent()) {
             sysGroup = groupOptional.get();
@@ -78,7 +78,7 @@ public class CustomizeAccessDecisionVoter implements AccessDecisionVoter {
         }
 
         // 查询这个角色的权限
-        List<SysMenu> sysMenuList = menuRepository.findAll(MenuSpec.findAllByGroupId(sysGroup.getId()));
+        List<SysMenu> sysMenuList = sysMenuRepository.findAll(SysMenuSpec.findAllByGroupId(sysGroup.getId()));
 
         // 判断请求的资源在不在权限里
 

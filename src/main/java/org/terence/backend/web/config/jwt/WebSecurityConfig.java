@@ -22,7 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.terence.backend.common.constant.CommonConstant;
 import org.terence.backend.dao.entity.admin.SysUser;
-import org.terence.backend.dao.repository.admin.UserRepository;
+import org.terence.backend.dao.repository.admin.SysUserRepository;
 import org.terence.backend.web.filter.JwtAuthenticationFilter;
 
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ import java.util.Optional;
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final UserRepository userRepository;
+    private final SysUserRepository sysUserRepository;
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
@@ -46,8 +46,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Autowired
-    public WebSecurityConfig(UserRepository userRepository, JwtAuthenticationFilter jwtAuthenticationFilter, AccessDecisionVoter<Object> accessDecisionVoter, JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
-        this.userRepository = userRepository;
+    public WebSecurityConfig(SysUserRepository sysUserRepository, JwtAuthenticationFilter jwtAuthenticationFilter, AccessDecisionVoter<Object> accessDecisionVoter, JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
+        this.sysUserRepository = sysUserRepository;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.accessDecisionVoter = accessDecisionVoter;
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
@@ -100,7 +100,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean("userDetailService")
     public UserDetailsService userDetailsService() {
         return (username) -> {
-            Optional<SysUser> baseUser = userRepository.findByUsername(username);
+            Optional<SysUser> baseUser = sysUserRepository.findByUsername(username);
             User user;
             if (baseUser.isPresent()) {
                 user = new User(baseUser.get().getUsername(), baseUser.get().getPassword(), true, true, true, true, new ArrayList<>());

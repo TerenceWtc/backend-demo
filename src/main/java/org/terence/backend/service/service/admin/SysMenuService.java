@@ -8,7 +8,7 @@ import java.util.List;
  * @author terence
  * @since 2019/3/1 17:07
  */
-public interface MenuService {
+public interface SysMenuService {
 
     List<MenuVo> getMenuList(String accessToken);
 }

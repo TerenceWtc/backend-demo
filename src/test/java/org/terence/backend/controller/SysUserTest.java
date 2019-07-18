@@ -3,9 +3,9 @@ package org.terence.backend.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.terence.backend.dao.entity.admin.SysGroup;
 import org.terence.backend.dao.entity.admin.SysUser;
-import org.terence.backend.dao.repository.admin.GroupRepository;
-import org.terence.backend.dao.repository.admin.UserRepository;
-import org.terence.backend.dao.repository.admin.specification.GroupSpec;
+import org.terence.backend.dao.repository.admin.SysGroupRepository;
+import org.terence.backend.dao.repository.admin.SysUserRepository;
+import org.terence.backend.dao.specification.admin.SysGroupSpec;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,13 +16,13 @@ import java.util.Optional;
  */
 //@RunWith(SpringRunner.class)
 //@SpringBootTest
-public class UserTest {
+public class SysUserTest {
 
     @Autowired
-    private GroupRepository groupRepository;
+    private SysGroupRepository sysGroupRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private SysUserRepository sysUserRepository;
 
 //    @Test
     public void test() {
@@ -50,7 +50,7 @@ public class UserTest {
     public void test2() {
         long userId = 8L;
         String username = "admin";
-        List<SysGroup> sysGroup = groupRepository.findAll(GroupSpec.findOneByUsername(username));
+        List<SysGroup> sysGroup = sysGroupRepository.findAll(SysGroupSpec.findOneByUsername(username));
 //        if (sysGroup.isPresent()) {
 //            System.out.println(sysGroup.get())
 //        }
@@ -63,12 +63,12 @@ public class UserTest {
     public void authorization() {
         long userId = 8L;
         long groupId = 1L;
-        Optional<SysUser> userOptional = userRepository.findById(userId);
-        Optional<SysGroup> groupOptional = groupRepository.findById(groupId);
+        Optional<SysUser> userOptional = sysUserRepository.findById(userId);
+        Optional<SysGroup> groupOptional = sysGroupRepository.findById(groupId);
         if (userOptional.isPresent() && groupOptional.isPresent()) {
             SysUser sysUser = userOptional.get();
             sysUser.setSysGroup(groupOptional.get());
-            userRepository.save(sysUser);
+            sysUserRepository.save(sysUser);
         }
     }
 }

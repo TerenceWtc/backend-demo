@@ -9,10 +9,10 @@ import org.terence.backend.common.utils.orika.BeanFormat;
 import org.terence.backend.dao.entity.admin.SysGroup;
 import org.terence.backend.dao.entity.admin.SysMenu;
 import org.terence.backend.dao.entity.base.TreeNode;
-import org.terence.backend.dao.repository.admin.MenuRepository;
-import org.terence.backend.dao.repository.admin.specification.MenuSpec;
-import org.terence.backend.service.service.admin.GroupService;
-import org.terence.backend.service.service.admin.MenuService;
+import org.terence.backend.dao.repository.admin.SysMenuRepository;
+import org.terence.backend.dao.specification.admin.SysMenuSpec;
+import org.terence.backend.service.service.admin.SysGroupService;
+import org.terence.backend.service.service.admin.SysMenuService;
 import org.terence.backend.service.vo.admin.MenuVo;
 import org.terence.backend.web.config.jwt.UserAuthConfig;
 
@@ -24,19 +24,19 @@ import java.util.List;
  * @since 2019/3/1 17:07
  */
 @Service
-public class MenuServiceImpl implements MenuService {
+public class SysMenuServiceImpl implements SysMenuService {
 
     private final UserAuthConfig userAuthConfig;
 
-    private final MenuRepository menuRepository;
+    private final SysMenuRepository sysMenuRepository;
 
-    private final GroupService groupService;
+    private final SysGroupService sysGroupService;
 
     @Autowired
-    public MenuServiceImpl(UserAuthConfig userAuthConfig, GroupService groupService, MenuRepository menuRepository) {
+    public SysMenuServiceImpl(UserAuthConfig userAuthConfig, SysGroupService sysGroupService, SysMenuRepository sysMenuRepository) {
         this.userAuthConfig = userAuthConfig;
-        this.groupService = groupService;
-        this.menuRepository = menuRepository;
+        this.sysGroupService = sysGroupService;
+        this.sysMenuRepository = sysMenuRepository;
     }
 
     @Override
@@ -47,8 +47,8 @@ public class MenuServiceImpl implements MenuService {
         } catch (Exception e) {
             throw new TokenException("invalid token");
         }
-        SysGroup sysGroup = groupService.getGroupByUserId(Long.parseLong(userJwtInfo.getId()));
-        List<SysMenu> sysMenuList = menuRepository.findAll(MenuSpec.findAllByGroupId(sysGroup.getId()));
+        SysGroup sysGroup = sysGroupService.getGroupByUserId(Long.parseLong(userJwtInfo.getId()));
+        List<SysMenu> sysMenuList = sysMenuRepository.findAll(SysMenuSpec.findAllByGroupId(sysGroup.getId()));
         List<MenuVo> menuVoList = new ArrayList<>();
         sysMenuList.forEach(item -> {
                     MenuVo menuVo = BeanFormat.formatMenuVo().getMapperFacade().map(item, MenuVo.class);

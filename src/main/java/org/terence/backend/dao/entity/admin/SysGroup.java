@@ -1,5 +1,6 @@
 package org.terence.backend.dao.entity.admin;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.ToString;
 
@@ -38,10 +39,12 @@ public class SysGroup implements Serializable {
     private String createBy;
 
     @OneToMany(mappedBy = "sysGroup", fetch = FetchType.EAGER)
+    @JsonBackReference
     private List<SysUser> sysUser;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "sys_group_menu", joinColumns = { @JoinColumn(name = "sys_group_id") },
     inverseJoinColumns = { @JoinColumn(name = "sys_menu_id") })
+    @JsonBackReference
     private List<SysMenu> sysMenus;
 }

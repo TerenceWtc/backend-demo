@@ -1,4 +1,4 @@
-package org.terence.backend.dao.repository.admin.specification;
+package org.terence.backend.dao.specification.admin;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.terence.backend.dao.entity.admin.SysGroup;
@@ -10,7 +10,7 @@ import javax.persistence.criteria.*;
  * @author terence
  * @since 2019/2/22 16:44
  */
-public class GroupSpec {
+public class SysGroupSpec {
 
     public static Specification<SysGroup> findOneByUserId(long userId) {
         return (Root<SysGroup> root, CriteriaQuery<?> query, CriteriaBuilder builder) -> {
