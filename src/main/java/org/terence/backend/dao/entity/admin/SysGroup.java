@@ -1,8 +1,14 @@
 package org.terence.backend.dao.entity.admin;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.ToString;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,8 +20,9 @@ import java.util.List;
  * @since 2019/2/20 10:15
  */
 @Data
-@ToString(exclude = {"sysUser", "sysMenus"})
+@ToString(exclude = {"sysMenus"})
 @Entity(name = "sys_group")
+@EntityListeners(AuditingEntityListener.class)
 public class SysGroup implements Serializable {
 
     private static final long serialVersionUID = -3751135703095273361L;
@@ -32,11 +39,21 @@ public class SysGroup implements Serializable {
 
     private String description;
 
-    @Column(nullable = false, columnDefinition = "datetime default now()")
+    @Column(nullable = false)
+    @CreatedDate
+    @JsonFormat(pattern="yyyy-MM-dd hh:mm:ss")
     private Date createTime;
 
     @Column(nullable = false)
+    @CreatedBy
     private String createBy;
+
+    @LastModifiedDate
+    @JsonFormat(pattern="yyyy-MM-dd hh:mm:ss")
+    private Date updateTime;
+
+    @LastModifiedBy
+    private String updateBy;
 
     @OneToMany(mappedBy = "sysGroup", fetch = FetchType.EAGER)
     @JsonBackReference
