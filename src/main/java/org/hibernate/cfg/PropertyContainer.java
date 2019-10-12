@@ -14,10 +14,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 import org.hibernate.AnnotationException;
-import org.hibernate.annotations.Any;
-import org.hibernate.annotations.ManyToAny;
-import org.hibernate.annotations.Target;
-import org.hibernate.annotations.Type;
+import org.hibernate.annotations.*;
 import org.hibernate.annotations.common.reflection.XClass;
 import org.hibernate.annotations.common.reflection.XProperty;
 import org.hibernate.boot.MappingException;
@@ -60,7 +57,8 @@ class PropertyContainer {
         List<XProperty> fields = this.xClass.getDeclaredProperties(AccessType.FIELD.getType());
         List<XProperty> getters = this.xClass.getDeclaredProperties(AccessType.PROPERTY.getType());
         this.preFilter(fields, getters);
-        Map<String, XProperty> persistentAttributesFromGetters = new HashMap();
+//        Map<String, XProperty> persistentAttributesFromGetters = new HashMap();
+        Map<String, XProperty> persistentAttributesFromGetters = new HashMap<String, XProperty>();
         this.collectPersistentAttributesUsingLocalAccessType(this.persistentAttributeMap, persistentAttributesFromGetters, fields, getters);
         this.collectPersistentAttributesUsingClassLevelAccessType(this.persistentAttributeMap, persistentAttributesFromGetters, fields, getters);
     }
@@ -189,9 +187,10 @@ class PropertyContainer {
     private AccessType determineLocalClassDefinedAccessStrategy() {
         AccessType hibernateDefinedAccessType = AccessType.DEFAULT;
         AccessType jpaDefinedAccessType = AccessType.DEFAULT;
-        org.hibernate.annotations.AccessType accessType = (org.hibernate.annotations.AccessType)this.xClass.getAnnotation(org.hibernate.annotations.AccessType.class);
-        if (accessType != null) {
-            hibernateDefinedAccessType = AccessType.getAccessStrategy(accessType.value());
+//        org.hibernate.annotations.AccessType accessType = (org.hibernate.annotations.AccessType)this.xClass.getAnnotation(org.hibernate.annotations.AccessType.class);
+        AttributeAccessor attributeAccessor = (AttributeAccessor)this.xClass.getAnnotation(AttributeAccessor.class);
+        if (attributeAccessor != null) {
+            hibernateDefinedAccessType = AccessType.getAccessStrategy(attributeAccessor.value());
         }
 
         Access access = (Access)this.xClass.getAnnotation(Access.class);
