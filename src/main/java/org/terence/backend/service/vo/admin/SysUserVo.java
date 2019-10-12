@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserVo implements Serializable {
+public class SysUserVo implements Serializable {
 
     private static final long serialVersionUID = -5309272160315307566L;
 
@@ -37,7 +37,7 @@ public class UserVo implements Serializable {
 
     private String groupName;
 
-    public UserVo(String userId, String username, String name, String groupId, String groupName) {
+    public SysUserVo(String userId, String username, String name, String groupId, String groupName) {
         this.userId = userId;
         this.username = username;
         this.name = name;

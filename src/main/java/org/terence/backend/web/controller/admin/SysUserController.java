@@ -6,7 +6,7 @@ import org.terence.backend.common.utils.orika.BeanFormat;
 import org.terence.backend.common.utils.orika.JsonFormat;
 import org.terence.backend.dao.entity.admin.SysUser;
 import org.terence.backend.service.service.admin.SysUserService;
-import org.terence.backend.service.vo.admin.UserVo;
+import org.terence.backend.service.vo.admin.SysUserVo;
 import org.terence.backend.service.vo.base.*;
 
 /**
@@ -27,24 +27,24 @@ public class SysUserController {
     /**
      * Return current sysUser insensitive information
      * @param accessToken: jwt access token
-     * @return UserVo
+     * @return SysUserVo
      */
     @GetMapping("getUserInfo")
-    public ObjectResponse<UserVo> getUserInfo(@RequestParam("accessToken") String accessToken) {
-        UserVo userVo = sysUserService.getUserInfo(accessToken);
-        return new ObjectResponse<>(userVo);
+    public ObjectResponse<SysUserVo> getUserInfo(@RequestParam("accessToken") String accessToken) {
+        SysUserVo sysUserVo = sysUserService.getUserInfo(accessToken);
+        return new ObjectResponse<>(sysUserVo);
     }
 
     @GetMapping("list")
-    public TableResponse<UserVo> list(String pageInfo) {
+    public TableResponse<SysUserVo> list(String pageInfo) {
         PageVo pageVo = JsonFormat.json2PageVo(pageInfo);
-        TableData<UserVo> userVoTableData = sysUserService.getList(pageVo);
+        TableData<SysUserVo> userVoTableData = sysUserService.getList(pageVo);
         return new TableResponse<>(userVoTableData);
     }
 
     @PostMapping("")
-    public BaseResponse addUser(@RequestBody UserVo userVo) {
-        sysUserService.addUser(userVo);
+    public BaseResponse addUser(@RequestBody SysUserVo sysUserVo) {
+        sysUserService.addUser(sysUserVo);
         return new BaseResponse();
     }
 
@@ -55,16 +55,16 @@ public class SysUserController {
     }
 
     @PutMapping("")
-    public BaseResponse updateUser(@RequestBody UserVo userVo) {
-        sysUserService.updateUser(userVo);
+    public BaseResponse updateUser(@RequestBody SysUserVo sysUserVo) {
+        sysUserService.updateUser(sysUserVo);
         return new BaseResponse();
     }
 
     @GetMapping("{id}")
-    public ObjectResponse<UserVo> getUser(@PathVariable long id) {
+    public ObjectResponse<SysUserVo> getUser(@PathVariable long id) {
         SysUser sysUser = sysUserService.getUserById(id);
-        UserVo userVo = BeanFormat.formatUserWithoutPwd(sysUser);
-        return new ObjectResponse<>(userVo);
+        SysUserVo sysUserVo = BeanFormat.formatUserWithoutPwd(sysUser);
+        return new ObjectResponse<>(sysUserVo);
     }
 
 }

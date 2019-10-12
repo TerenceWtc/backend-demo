@@ -10,23 +10,23 @@ import org.terence.backend.dao.entity.base.TreeNode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class MenuVo extends TreeNode {
+public class SysMenuVo extends TreeNode {
 
     private String title;
     private String code;
 //    private String href;
     private String icon;
 
-    public MenuVo() {
+    public SysMenuVo() {
     }
 
-    public MenuVo(int id, String name, int parentId) {
+    public SysMenuVo(int id, String name, int parentId) {
         this.id = id;
         this.parentId = parentId;
         this.title = name;
     }
 
-    public MenuVo(int id, String name, MenuVo parent) {
+    public SysMenuVo(int id, String name, SysMenuVo parent) {
         this.id = id;
         this.parentId = parent.getId();
         this.title = name;

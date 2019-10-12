@@ -13,7 +13,7 @@ import org.terence.backend.dao.repository.admin.SysMenuRepository;
 import org.terence.backend.dao.specification.admin.SysMenuSpec;
 import org.terence.backend.service.service.admin.SysGroupService;
 import org.terence.backend.service.service.admin.SysMenuService;
-import org.terence.backend.service.vo.admin.MenuVo;
+import org.terence.backend.service.vo.admin.SysMenuVo;
 import org.terence.backend.web.config.jwt.UserAuthConfig;
 
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ public class SysMenuServiceImpl implements SysMenuService {
     }
 
     @Override
-    public List<MenuVo> getMenuList(String accessToken) {
+    public List<SysMenuVo> getMenuList(String accessToken) {
         IUserJwtInfo userJwtInfo;
         try {
             userJwtInfo = JwtHelper.getInfoFromToken(accessToken, userAuthConfig.getPublicKeyPath());
@@ -49,12 +49,12 @@ public class SysMenuServiceImpl implements SysMenuService {
         }
         SysGroup sysGroup = sysGroupService.getGroupByUserId(Long.parseLong(userJwtInfo.getId()));
         List<SysMenu> sysMenuList = sysMenuRepository.findAll(SysMenuSpec.findAllByGroupId(sysGroup.getId()));
-        List<MenuVo> menuVoList = new ArrayList<>();
+        List<SysMenuVo> sysMenuVoList = new ArrayList<>();
         sysMenuList.forEach(item -> {
-                    MenuVo menuVo = BeanFormat.formatMenuVo().getMapperFacade().map(item, MenuVo.class);
-                    menuVoList.add(menuVo);
+                    SysMenuVo sysMenuVo = BeanFormat.formatMenuVo().getMapperFacade().map(item, SysMenuVo.class);
+                    sysMenuVoList.add(sysMenuVo);
                 });
-        return build(menuVoList, -1);
+        return build(sysMenuVoList, -1);
     }
 
     private <T extends TreeNode> List<T> build(List<T> treeNodes, int root) {

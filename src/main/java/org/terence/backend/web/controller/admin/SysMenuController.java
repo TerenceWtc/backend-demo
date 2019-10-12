@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.terence.backend.service.service.admin.SysMenuService;
-import org.terence.backend.service.vo.admin.MenuVo;
+import org.terence.backend.service.vo.admin.SysMenuVo;
 import org.terence.backend.service.vo.base.ObjectResponse;
 
 import java.util.List;
@@ -27,8 +27,8 @@ public class SysMenuController {
     }
 
     @GetMapping("getMenuList")
-    public ObjectResponse<List<MenuVo>> getMenuList(@RequestParam("accessToken") String accessToken) {
-        List<MenuVo> menuVoList = sysMenuService.getMenuList(accessToken);
-        return new ObjectResponse<>(menuVoList);
+    public ObjectResponse<List<SysMenuVo>> getMenuList(@RequestParam("accessToken") String accessToken) {
+        List<SysMenuVo> sysMenuVoList = sysMenuService.getMenuList(accessToken);
+        return new ObjectResponse<>(sysMenuVoList);
     }
 }

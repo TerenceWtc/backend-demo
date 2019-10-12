@@ -1,12 +1,9 @@
 package org.terence.backend.service.service.admin;
 
 import org.terence.backend.dao.entity.admin.SysUser;
-import org.terence.backend.service.vo.admin.UserVo;
+import org.terence.backend.service.vo.admin.SysUserVo;
 import org.terence.backend.service.vo.base.PageVo;
-import org.terence.backend.service.vo.base.ParamsVo;
 import org.terence.backend.service.vo.base.TableData;
-
-import java.util.List;
 
 /**
  * @author terence
@@ -18,17 +15,17 @@ public interface SysUserService {
 
     SysUser registerUser(SysUser sysUser);
 
-    UserVo getUserInfo(String accessToken);
+    SysUserVo getUserInfo(String accessToken);
 
     boolean verifyUsername(String username);
 
-    TableData<UserVo> getList(PageVo pageVo);
+    TableData<SysUserVo> getList(PageVo pageVo);
 
-    void addUser(UserVo userVo);
+    void addUser(SysUserVo sysUserVo);
 
     void deleteUserById(long id);
 
-    void updateUser(UserVo userVo);
+    void updateUser(SysUserVo sysUserVo);
 
     SysUser getUserById(long id);
 }

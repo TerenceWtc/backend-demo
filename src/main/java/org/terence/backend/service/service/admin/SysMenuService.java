@@ -1,6 +1,6 @@
 package org.terence.backend.service.service.admin;
 
-import org.terence.backend.service.vo.admin.MenuVo;
+import org.terence.backend.service.vo.admin.SysMenuVo;
 
 import java.util.List;
 
@@ -10,5 +10,5 @@ import java.util.List;
  */
 public interface SysMenuService {
 
-    List<MenuVo> getMenuList(String accessToken);
+    List<SysMenuVo> getMenuList(String accessToken);
 }

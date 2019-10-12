@@ -17,14 +17,11 @@ import org.terence.backend.dao.repository.admin.SysUserRepository;
 import org.terence.backend.dao.specification.admin.SysUserSpec;
 import org.terence.backend.service.service.admin.SysGroupService;
 import org.terence.backend.service.service.admin.SysUserService;
-import org.terence.backend.service.vo.admin.UserVo;
+import org.terence.backend.service.vo.admin.SysUserVo;
 import org.terence.backend.service.vo.base.PageVo;
-import org.terence.backend.service.vo.base.ParamsVo;
 import org.terence.backend.service.vo.base.TableData;
 import org.terence.backend.web.config.jwt.UserAuthConfig;
 
-import java.sql.Date;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -65,7 +62,7 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
-    public UserVo getUserInfo(String accessToken) {
+    public SysUserVo getUserInfo(String accessToken) {
         IUserJwtInfo userJwtInfo;
         try {
             userJwtInfo = JwtHelper.getInfoFromToken(accessToken, userAuthConfig.getPublicKeyPath());
@@ -80,7 +77,7 @@ public class SysUserServiceImpl implements SysUserService {
             // TODO
             throw new NullValueException("");
         }
-        return new UserVo(sysUser.getId() + "", sysUser.getUsername(), sysUser.getName(), sysUser.getSysGroup().getId() + "", sysUser.getSysGroup().getName());
+        return new SysUserVo(sysUser.getId() + "", sysUser.getUsername(), sysUser.getName(), sysUser.getSysGroup().getId() + "", sysUser.getSysGroup().getName());
     }
 
     @Override
@@ -90,20 +87,20 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
-    public TableData<UserVo> getList(PageVo pageVo) {
+    public TableData<SysUserVo> getList(PageVo pageVo) {
         PageRequest pageRequest = PageRequest.of(pageVo.getPage() - 1, pageVo.getSize());
         Page<SysUser> userPage = sysUserRepository.findAll(SysUserSpec.searchAll(pageVo.getParamsVoList()), pageRequest);
-        List<UserVo> userVos = new ArrayList<>();
-        userPage.getContent().forEach(user -> userVos.add(new UserVo(user.getId() + "", user.getUsername(), user.getName(), user.getSysGroup().getId() + "", user.getSysGroup().getName())));
+        List<SysUserVo> sysUserVos = new ArrayList<>();
+        userPage.getContent().forEach(user -> sysUserVos.add(new SysUserVo(user.getId() + "", user.getUsername(), user.getName(), user.getSysGroup().getId() + "", user.getSysGroup().getName())));
 
-        return new TableData<>(userPage.getTotalElements(), userVos);
+        return new TableData<>(userPage.getTotalElements(), sysUserVos);
     }
 
     @Override
-    public void addUser(UserVo userVo) {
-        SysUser sysUser = BeanFormat.formatUserAndUserVo().getMapperFacade().map(userVo, SysUser.class);
-        sysUser.setCreateTime(Date.valueOf(LocalDate.now()));
-        sysUser.setCreateBy("admin");
+    public void addUser(SysUserVo sysUserVo) {
+        SysUser sysUser = BeanFormat.formatUserAndUserVo().getMapperFacade().map(sysUserVo, SysUser.class);
+//        sysUser.setCreateTime(Date.valueOf(LocalDate.now()));
+//        sysUser.setCreateBy("admin");
         SysGroup sysGroup = sysGroupService.getGroupById(-1L);
         sysUser.setSysGroup(sysGroup);
         sysUser.setPassword(new BCryptPasswordEncoder(CommonConstant.PASSWORD_ENCORDER_SALT).encode(sysUser.getPassword()));
@@ -119,9 +116,9 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Override
 //    @CachePut(value = "sysUser", key = "#p0.username")
-    public void updateUser(UserVo userVo) {
+    public void updateUser(SysUserVo sysUserVo) {
         // TODO:增量更新
-        SysUser sysUserNew = BeanFormat.formatUserAndUserVo().getMapperFacade().map(userVo, SysUser.class);
+        SysUser sysUserNew = BeanFormat.formatUserAndUserVo().getMapperFacade().map(sysUserVo, SysUser.class);
         Optional<SysUser> userOld = sysUserRepository.findById(sysUserNew.getId());
         if (userOld.isPresent()) {
             SysUser sysUser = userOld.get();

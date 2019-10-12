@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.terence.backend.common.utils.orika.BeanFormat;
 import org.terence.backend.dao.entity.admin.SysGroup;
 import org.terence.backend.service.service.admin.SysGroupService;
-import org.terence.backend.service.vo.admin.GroupVo;
+import org.terence.backend.service.vo.admin.SysGroupVo;
 import org.terence.backend.service.vo.base.ObjectResponse;
 
 import java.util.ArrayList;
@@ -28,11 +28,11 @@ public class SysGroupController {
         this.sysGroupService = sysGroupService;
     }
 
-    @GetMapping("idAndName")
-    public ObjectResponse<List<GroupVo>> getGroupIdAndName() {
+    @GetMapping("groupIdAndName")
+    public ObjectResponse<List<SysGroupVo>> getGroupIdAndName() {
         List<SysGroup> sysGroupList = sysGroupService.getGroupIdAndName();
-        List<GroupVo> groupVoList = new ArrayList<>();
-        sysGroupList.forEach(item -> groupVoList.add(BeanFormat.formatGroupVo().getMapperFacade().map(item, GroupVo.class)));
-        return new ObjectResponse<>(groupVoList);
+        List<SysGroupVo> sysGroupVoList = new ArrayList<>();
+        sysGroupList.forEach(item -> sysGroupVoList.add(BeanFormat.formatGroupVo().getMapperFacade().map(item, SysGroupVo.class)));
+        return new ObjectResponse<>(sysGroupVoList);
     }
 }
