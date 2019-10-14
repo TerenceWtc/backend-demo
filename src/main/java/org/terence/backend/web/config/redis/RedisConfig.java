@@ -23,11 +23,6 @@ import java.time.Duration;
 @EnableCaching
 public class RedisConfig {
 
-    /*@Bean
-    public CacheManager cacheManager(RedisConnectionFactory connectionFactory) {
-        return RedisCacheManager.create(connectionFactory);
-    }*/
-
     @Bean
     public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
         // initialize a RedisCacheWriter
@@ -41,7 +36,7 @@ public class RedisConfig {
                 .fromSerializer(jsonSerializer);
         RedisCacheConfiguration defaultCacheConfig = RedisCacheConfiguration.defaultCacheConfig()
                 .serializeValuesWith(pair);
-        // this config does not work
+        /// this config does not work
         // defaultCacheConfig.entryTtl(Duration.ofSeconds(30));
 
         // set default expire time 1800s

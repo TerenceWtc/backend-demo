@@ -65,7 +65,7 @@ public class CustomizeAccessDecisionVoter implements AccessDecisionVoter {
         long userId = Long.parseLong(idStr);
         HttpServletRequest request = ((FilterInvocation) o).getHttpRequest();
         final String method = request.getMethod();
-        final String requestURI = request.getRequestURI();
+        final String requestUri = request.getRequestURI();
 
         // 查询这个人的角色
         Optional<SysGroup> groupOptional = sysGroupRepository.findOne(SysGroupSpec.findOneByUserId(userId));

@@ -14,7 +14,11 @@ public class SysMenuVo extends TreeNode {
 
     private String title;
     private String code;
-//    private String href;
+    /// this attribute is temporarily not used
+    /**
+     *private String href;
+     */
+
     private String icon;
 
     public SysMenuVo() {

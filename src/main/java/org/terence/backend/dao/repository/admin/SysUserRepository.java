@@ -12,5 +12,9 @@ import java.util.Optional;
  */
 public interface SysUserRepository extends JpaRepository<SysUser, Long>, JpaSpecificationExecutor<SysUser> {
 
+    /** find user by username
+     * @param username login username
+     * @return Optional<SysUser>
+     */
     Optional<SysUser> findByUsername(String username);
 }

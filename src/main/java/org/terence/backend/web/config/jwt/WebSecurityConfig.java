@@ -98,6 +98,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean("userDetailService")
+    @Override
     public UserDetailsService userDetailsService() {
         return (username) -> {
             Optional<SysUser> baseUser = sysUserRepository.findByUsername(username);

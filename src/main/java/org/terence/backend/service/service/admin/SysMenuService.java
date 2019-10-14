@@ -10,5 +10,9 @@ import java.util.List;
  */
 public interface SysMenuService {
 
+    /** find the menu list that current user can see
+     * @param accessToken access token
+     * @return List<SysMenuVo>
+     */
     List<SysMenuVo> getMenuList(String accessToken);
 }

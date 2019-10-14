@@ -99,8 +99,6 @@ public class SysUserServiceImpl implements SysUserService {
     @Override
     public void addUser(SysUserVo sysUserVo) {
         SysUser sysUser = BeanFormat.formatUserAndUserVo().getMapperFacade().map(sysUserVo, SysUser.class);
-//        sysUser.setCreateTime(Date.valueOf(LocalDate.now()));
-//        sysUser.setCreateBy("admin");
         SysGroup sysGroup = sysGroupService.getGroupById(-1L);
         sysUser.setSysGroup(sysGroup);
         sysUser.setPassword(new BCryptPasswordEncoder(CommonConstant.PASSWORD_ENCORDER_SALT).encode(sysUser.getPassword()));

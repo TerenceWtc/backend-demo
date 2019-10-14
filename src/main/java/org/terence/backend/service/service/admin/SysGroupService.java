@@ -10,9 +10,20 @@ import java.util.List;
  */
 public interface SysGroupService {
 
-    SysGroup getGroupById(long l);
+    /** get group by id
+     * @param id group id
+     * @return SysGroup
+     */
+    SysGroup getGroupById(long id);
 
-    SysGroup getGroupByUserId(long parseLong);
+    /** find the group where current user in
+     * @param userId user id
+     * @return SysGroup
+     */
+    SysGroup getGroupByUserId(long userId);
 
+    /** get group list
+     * @return List<SysGroup>
+     */
     List<SysGroup> getGroupIdAndName();
 }

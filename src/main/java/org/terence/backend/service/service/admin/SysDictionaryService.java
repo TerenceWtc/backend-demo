@@ -9,5 +9,8 @@ import java.util.List;
  * @since 2019/7/25 13:33
  */
 public interface SysDictionaryService {
+    /** data dictionary of gender
+     * @return List<SysDictionary>
+     */
     List<SysDictionary> getGender();
 }

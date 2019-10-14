@@ -187,7 +187,6 @@ class PropertyContainer {
     private AccessType determineLocalClassDefinedAccessStrategy() {
         AccessType hibernateDefinedAccessType = AccessType.DEFAULT;
         AccessType jpaDefinedAccessType = AccessType.DEFAULT;
-//        org.hibernate.annotations.AccessType accessType = (org.hibernate.annotations.AccessType)this.xClass.getAnnotation(org.hibernate.annotations.AccessType.class);
         AttributeAccessor attributeAccessor = (AttributeAccessor)this.xClass.getAnnotation(AttributeAccessor.class);
         if (attributeAccessor != null) {
             hibernateDefinedAccessType = AccessType.getAccessStrategy(attributeAccessor.value());

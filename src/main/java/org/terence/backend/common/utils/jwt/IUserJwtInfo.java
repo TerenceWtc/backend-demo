@@ -6,9 +6,18 @@ package org.terence.backend.common.utils.jwt;
  */
 public interface IUserJwtInfo {
 
+    /** get user id
+     * @return String
+     */
     String getId();
 
+    /** get user name
+     * @return String
+     */
     String getUsername();
 
+    /** get real name
+     * @return String
+     */
     String getName();
 }
