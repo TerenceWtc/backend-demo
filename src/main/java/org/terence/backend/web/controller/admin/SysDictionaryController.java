@@ -1,5 +1,7 @@
 package org.terence.backend.web.controller.admin;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +21,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("admin/sysDictionary")
+@Api(tags = "SysDictionaryController", description = "字典")
 public class SysDictionaryController {
 
     private final SysDictionaryService sysDictionaryService;
@@ -28,6 +31,7 @@ public class SysDictionaryController {
         this.sysDictionaryService = sysDictionaryService;
     }
 
+    @ApiOperation(value = "获取性别字典")
     @GetMapping("/getGenderList")
     public ObjectResponse<List<SysDictionaryVo>> getGender() {
         List<SysDictionary> genderList = sysDictionaryService.getGender();

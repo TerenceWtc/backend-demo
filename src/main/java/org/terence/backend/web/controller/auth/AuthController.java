@@ -1,5 +1,6 @@
 package org.terence.backend.web.controller.auth;
 
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.terence.backend.service.service.auth.AuthService;
@@ -16,6 +17,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("auth")
+@Api(tags = "AuthController", description = "授权")
 public class AuthController {
 
     private final AuthService authService;
@@ -28,12 +30,15 @@ public class AuthController {
         this.userAuthConfig = userAuthConfig;
     }
 
+    @ApiOperation(value = "登录")
     @PostMapping("/login")
-    public ObjectResponse<Token> login(@RequestBody Map<String, String> body) {
+    public ObjectResponse<Token> login(
+            @RequestBody Map<String, String> body) {
         Token token = authService.login(body.get("username"), body.get("password"));
         return new ObjectResponse<>(token);
     }
 
+    @ApiOperation(value = "注册")
     @PostMapping("/register")
     public ObjectResponse<Token> register(@RequestBody Map<String, String> body) {
         Token token = authService.register(body.get("username"), body.get("password"), body.get("name"), body.get("email"));
@@ -45,6 +50,7 @@ public class AuthController {
      * @param username: login user name
      * @return Boolean
      */
+    @ApiOperation(value = "校验用户名")
     @GetMapping("/verifyUsername")
     public ObjectResponse<Boolean> verifyUsername(@RequestParam("username") String username) {
         boolean result = authService.verifyUsername(username);
@@ -57,6 +63,7 @@ public class AuthController {
      * @param request: HttpServletRequest
      * @return String
      */
+    @ApiOperation(value = "刷新token")
     @PostMapping("/refresh")
     public ObjectResponse<String> refresh(HttpServletRequest request) {
         String refreshToken = request.getHeader(userAuthConfig.getRefreshHeader());

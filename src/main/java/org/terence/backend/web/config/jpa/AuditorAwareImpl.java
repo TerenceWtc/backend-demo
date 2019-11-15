@@ -1,4 +1,4 @@
-package org.terence.backend.web.config.sys;
+package org.terence.backend.web.config.jpa;
 
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;

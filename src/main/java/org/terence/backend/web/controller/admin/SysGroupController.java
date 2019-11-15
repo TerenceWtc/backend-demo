@@ -1,5 +1,7 @@
 package org.terence.backend.web.controller.admin;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +21,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("admin/sysGroup")
+@Api(tags = "SysGroupController", description = "角色")
 public class SysGroupController {
 
     private final SysGroupService sysGroupService;
@@ -28,6 +31,7 @@ public class SysGroupController {
         this.sysGroupService = sysGroupService;
     }
 
+    @ApiOperation(value = "获取角色列表")
     @GetMapping("groupIdAndName")
     public ObjectResponse<List<SysGroupVo>> getGroupIdAndName() {
         List<SysGroup> sysGroupList = sysGroupService.getGroupIdAndName();
