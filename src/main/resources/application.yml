@@ -16,6 +16,21 @@ spring:
     username: root
     password: ENC(DDuWH3B+9JCi7IVVMiD+OQ==)
     driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      initial-size: 1
+      max-active: 10
+      min-idle: 1
+      filters: stat, wall, log4j2
+      filter:
+        stat:
+          enabled: true
+          db-type: mysql
+          log-slow-sql: true
+          slow-sql-millis: 2000
+        wall:
+          enabled: true
+          db-type: mysql
   jpa:
     show-sql: true
     hibernate:

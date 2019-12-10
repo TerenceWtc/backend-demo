@@ -57,7 +57,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(daoAuthenticationProvider());
         // 用这个方式会导致无法抛出UsernameNotFoundException异常
-//        auth.userDetailsService(userDetailsService());
+        // auth.userDetailsService(userDetailsService());
     }
 
     @Override
@@ -65,6 +65,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring()
                 // for swagger
                 .antMatchers("/v2/api-docs", "/definitions/**", "/configuration/ui", "/swagger-resources/**", "/configuration/security", "/swagger-ui.html", "/webjars/**","/swagger-resources/configuration/ui","/swagge‌​r-ui.html")
+                // for druid pool
+                .antMatchers(HttpMethod.POST, "/druid/*")
                 .antMatchers(HttpMethod.POST, "/auth/login")
                 .antMatchers(HttpMethod.POST, "/auth/register")
                 .antMatchers(HttpMethod.POST, "/auth/refresh")
